@@ -9,11 +9,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuniorFactory.Lesson2", "Ju
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuniorFactory.Lesson3", "JuniorFactory.Lesson3\JuniorFactory.Lesson3.csproj", "{668B939C-B547-40BC-9E12-C8FEF75BBBA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuniorFactory.Lesson5", "JuniorFactory.Lesson5\JuniorFactory.Lesson5.csproj", "{07C33075-12CC-433A-A3BC-3E20C2EC0459}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuniorFactory.Lesson5", "JuniorFactory.Lesson5\JuniorFactory.Lesson5.csproj", "{07C33075-12CC-433A-A3BC-3E20C2EC0459}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuniorFactory.Lesson5.Tests", "JuniorFactory.Lesson5Tests\JuniorFactory.Lesson5.Tests.csproj", "{3B883BA2-A9C3-450C-A8BD-B0C2683F8AD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuniorFactory.Lesson5.Tests", "JuniorFactory.Lesson5Tests\JuniorFactory.Lesson5.Tests.csproj", "{3B883BA2-A9C3-450C-A8BD-B0C2683F8AD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuniorFactory.Lesson5.NunitTests", "JuniorFactory.Lesson5.NunitTests\JuniorFactory.Lesson5.NunitTests.csproj", "{0569258E-5693-4E60-8B87-38543AB19226}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuniorFactory.Lesson5.NunitTests", "JuniorFactory.Lesson5.NunitTests\JuniorFactory.Lesson5.NunitTests.csproj", "{0569258E-5693-4E60-8B87-38543AB19226}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuniorFactory.Lesson6", "Lesson6\JuniorFactory.Lesson6.csproj", "{847CC235-0A30-430D-ADD4-1C3D237BC51E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JuniorFactory.Lesson7", "JuniorFactory.Lesson7\JuniorFactory.Lesson7.csproj", "{3E515B57-8331-4402-8478-2BBE137874BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuniorFactory.Threads", "JuniorFactory.Threads\JuniorFactory.Threads.csproj", "{70DF1937-F6DD-4239-8A9E-57FC7E3E9E47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +51,18 @@ Global
 		{0569258E-5693-4E60-8B87-38543AB19226}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0569258E-5693-4E60-8B87-38543AB19226}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0569258E-5693-4E60-8B87-38543AB19226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{847CC235-0A30-430D-ADD4-1C3D237BC51E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{847CC235-0A30-430D-ADD4-1C3D237BC51E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{847CC235-0A30-430D-ADD4-1C3D237BC51E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{847CC235-0A30-430D-ADD4-1C3D237BC51E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E515B57-8331-4402-8478-2BBE137874BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E515B57-8331-4402-8478-2BBE137874BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E515B57-8331-4402-8478-2BBE137874BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E515B57-8331-4402-8478-2BBE137874BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70DF1937-F6DD-4239-8A9E-57FC7E3E9E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70DF1937-F6DD-4239-8A9E-57FC7E3E9E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70DF1937-F6DD-4239-8A9E-57FC7E3E9E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70DF1937-F6DD-4239-8A9E-57FC7E3E9E47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

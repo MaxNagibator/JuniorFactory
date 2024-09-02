@@ -1,0 +1,45 @@
+﻿<html>
+<body>
+HTML JS CSS
+
+<button onclick="mySuperClick()">Жмякми меня</button>
+<span>вы жмякнули<label id="pressCount"></label></span>
+<div>div1</div>
+<div>div2</div>
+<span>span1</span>
+<span>span2</span>
+<i class="fa fa-user"></i>
+<div class="svetofor-item" style="background: darkred;">
+Красная клеточка
+</div>
+<div class="svetofor-item" style="background: yellow;">
+Жёлтая клеточка
+</div>
+<div class="svetofor-item" style="background: green;">
+Зелёная клеточка
+</div>
+<script>
+	
+	var clickCounter = 0;
+	function mySuperClick() {
+		clickCounter++;
+		var pressCountLabel = document.getElementById('pressCount');
+		pressCountLabel.innerHTML = clickCounter;
+	}
+</script>
+<style>
+	.svetofor-item {
+		width: 100px;
+		height: 50px;
+		text-align: center;
+		padding-top: 10px;
+	}
+	
+	#pressCount {
+		border: 1px solid orange;
+		font-size: 20px;
+		padding: 5px 10px 15px 20px;
+	}
+</style>
+</body>
+</html>
