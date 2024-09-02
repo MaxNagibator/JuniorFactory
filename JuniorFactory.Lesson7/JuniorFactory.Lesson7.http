@@ -1,0 +1,6 @@
+@JuniorFactory.Lesson7_HostAddress = http://localhost:5086
+
+GET {{JuniorFactory.Lesson7_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
