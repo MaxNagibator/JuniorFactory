@@ -1,4 +1,4 @@
-namespace JuniorFactory.Lesson6.Models
+namespace JuniorFactory.Lesson6.SimpleSiteMvc.Models
 {
     public class ErrorViewModel
     {

@@ -1,15 +1,14 @@
 using System.Diagnostics;
-using JuniorFactory.Lesson6.Models;
-using JuniorFactory.Lesson6.Models.Workers;
+using JuniorFactory.Lesson6.SimpleSiteMvc.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JuniorFactory.Lesson6.Controllers
+namespace JuniorFactory.Lesson6.SimpleSiteMvc.Controllers
 {
-    public class WorkersController : Controller
+    public class HomeController : Controller
     {
-        private readonly ILogger<WorkersController> _logger;
+        private readonly ILogger<HomeController> _logger;
 
-        public WorkersController(ILogger<WorkersController> logger)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
@@ -21,11 +20,7 @@ namespace JuniorFactory.Lesson6.Controllers
 
         public IActionResult Privacy()
         {
-            // ���������� � ����
-            var model = new PrivaceModel();
-            model.Name = "����";
-            model.Age = 19;
-            return View("Test222", model);
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
