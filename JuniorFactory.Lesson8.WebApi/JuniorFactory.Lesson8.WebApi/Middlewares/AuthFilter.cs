@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace JuniorFactory.Lesson8_WebApi.Middlewares
+namespace JuniorFactory.Lesson8.Middlewares
 {
     public enum Permissions
     {

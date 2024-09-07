@@ -1,4 +1,4 @@
-using JuniorFactory.Lesson8_WebApi;
+using JuniorFactory.Lesson8;
 
 var builder = WebApplication.CreateBuilder(args);
 

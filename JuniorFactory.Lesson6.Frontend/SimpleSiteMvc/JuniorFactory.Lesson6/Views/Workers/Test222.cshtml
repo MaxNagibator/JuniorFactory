@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+@model JuniorFactory.Lesson6.Models.Workers.PrivaceModel
+@{
+    var person = Model;
+}
+<h1>@ViewData["Title"]</h1>
+
+Приватность наше всё
+
+<br />
+<label>Здравствуй @person.Name</label>
+<br />
+<label>Тебе правда @person.Age лет?</label>

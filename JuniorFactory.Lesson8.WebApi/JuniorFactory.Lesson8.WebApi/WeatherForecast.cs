@@ -1,4 +1,4 @@
-namespace JuniorFactory.Lesson8_WebApi
+namespace JuniorFactory.Lesson8
 {
     public class WeatherForecast
     {

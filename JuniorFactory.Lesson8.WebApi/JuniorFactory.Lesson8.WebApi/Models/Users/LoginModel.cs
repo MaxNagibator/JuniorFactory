@@ -1,4 +1,4 @@
-﻿namespace JuniorFactory.Lesson8_WebApi.Models.Users
+﻿namespace JuniorFactory.Lesson8.Models.Users
 {
     public class LoginModel
     {

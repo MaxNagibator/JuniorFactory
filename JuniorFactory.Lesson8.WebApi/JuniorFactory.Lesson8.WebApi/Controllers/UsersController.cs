@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using JuniorFactory.Lesson8_WebApi.Middlewares;
-using JuniorFactory.Lesson8_WebApi.Models.Users;
+using JuniorFactory.Lesson8.Middlewares;
+using JuniorFactory.Lesson8.Models.Users;
 
-namespace JuniorFactory.Lesson8_WebApi.Controllers
+namespace JuniorFactory.Lesson8.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

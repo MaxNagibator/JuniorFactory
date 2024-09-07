@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace JuniorFactory.Lesson8_WebApi.Controllers
+namespace JuniorFactory.Lesson8.Controllers
 {
     [ApiController]
     [Route("[controller]")]
