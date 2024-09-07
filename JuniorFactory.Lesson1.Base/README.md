@@ -12,6 +12,4 @@
 
 Таймкоды с описанием можно посмотреть [здесь](video.md)
 
-Видео-урок по этой теме:
-
-[.net помойка / 2024.03.11 / JuniorFactory / 1. Знакомство с C#](https://www.youtube.com/watch?v=F3ScyGmNt5Y)
+Видео-урок по этой теме: [.net помойка / 2024.03.11 / JuniorFactory / 1. Знакомство с C#](https://www.youtube.com/watch?v=F3ScyGmNt5Y)
