@@ -100,7 +100,7 @@ YouTube-канал ["Лучик света продуктовой разрабо
 11. **[Асинхронность и параллелизм](JuniorFactory.Lesson11.Threads)**  
     Изучение многопоточности, асинхронных операций и отмены задач в .NET.
 
-12. **[CI/CD](JuniorFactory.Lesson12.JuniorFactory.Lesson12.CI_CD)**  
+12. **[CI/CD](JuniorFactory.Lesson12.CI_CD)**  
     Что такое CI/CD. Автоматизация работы.
 
 ## Как использовать этот курс
@@ -120,6 +120,7 @@ YouTube-канал ["Лучик света продуктовой разрабо
 
 Все видео-уроки доступны на YouTube-канале "Лучик света продуктовой разработки"
 в плейлисте по ссылке: [JuniorFactory / Разработка для начинающих](https://www.youtube.com/playlist?list=PLgBM0sSyvWQX1amvtC8-rsmDEwKREdd0t)
+резервная санкционная копия: https://rutube.ru/plst/626607  и https://vkvideo.ru/@bobito217
 
 ## Заключение
 

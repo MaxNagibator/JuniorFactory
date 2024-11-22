@@ -15,4 +15,4 @@ https://github.com/MaxNagibator/Solyanka
 Будут рассмотрены парсинг данных, сохранение данных в различных форматах, 
 оптимизация кода и решение проблем с регулярными выражениями.
 
-Видео-урок по этой теме: [.net помойка / 2024.08.29 / JuniorFactory / 10. Xml CSV read write](https://www.youtube.com/watch?v=CqmaB5hHZ5k)
+Видео-урок по этой теме: [.net помойка / JuniorFactory / 10. Xml CSV read write](https://www.youtube.com/watch?v=CqmaB5hHZ5k)

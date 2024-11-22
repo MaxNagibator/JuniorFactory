@@ -17,4 +17,4 @@
 
 Видео-урок по этой теме:
 
-[.net помойка / 2024.09.02 / JuniorFactory / 11. Async Parallel](https://www.youtube.com/watch?v=mwKHjZm1oNQ)
+[.net помойка / JuniorFactory / 11. Async Parallel](https://www.youtube.com/watch?v=mwKHjZm1oNQ)
