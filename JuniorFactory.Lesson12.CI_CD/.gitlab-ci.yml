@@ -1,0 +1,312 @@
+variables:
+  ARTEFACT_BASE: 'D:\PipeArtefacts\${CI_PIPELINE_ID}'
+  ARTEFACT_BUILDS: '${ARTEFACT_BASE}\Builds'
+  ARTEFACT_INTEGRATION_TESTS: '${ARTEFACT_BASE}\IntegrationTests'
+  ARTEFACT_INTEGRATION_CORE_TESTS: '${ARTEFACT_BASE}\IntegrationCoreTests'
+  ARTEFACT_SCRIPTS: '${ARTEFACT_BASE}\Scripts'
+  ARTEFACT_UNIT_TESTS: '${ARTEFACT_BASE}\UnitTests\Tests' # название и путь лучше особо не трогать, из за unit тестов MigrationQualityTests
+  MIGRATOR_FOLDER: '${ARTEFACT_BASE}\agrohistoryv.migration' # название и путь лучше особо не трогать, из за unit тестов MigrationQualityTests
+  UITESTS_BROWSER_COUNT: 9 #хз кто 9 вообще поставил, помоему больше 2 не стоило
+  UITESTS_WAIT_MULTIPLIER: 5
+  SITE_REMOTE_VM_NAME: 'webtest-02.agrohistory.local'
+  SITE_REMOTE_VM_SHARED: 'T:\SharedForDeployments'
+  SITE_REMOTE_VM_SHARED_EXTERNAL: '\\${SITE_REMOTE_VM_NAME}\SharedForDeployments'
+  SITE_REMOTE_VM_IIS_BASE_DIR: 'D:\inetpub\pipelinetests'
+  SITE_REMOTE_VM_IIS_BASE_DIR_EXTERNAL: '\\${SITE_REMOTE_VM_NAME}\Sites'
+  TEST_FOLDER: 'Tests\bin\Release'
+  DEPLOY_FOLDER: 'P:\Projects\YourApp\Builds'
+  NUGET_PATH: 'd:\agent,azure\_work\_tool\NuGet\5.11.6\x64\nuget.exe' #вынести бы, но пока с первого агента подсосём
+  MSBUILD_PATH: 'C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\amd64\msbuild.exe'
+  NUNIT_PATH: 'C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe'
+  MSTEST_PATH: 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\TestPlatform\vstest.console.exe'
+  ZIP_PATH: 'C:\Program Files\7-Zip\7z.exe'
+
+stages:
+  - FullTests
+
+PreBuild:
+  stage: FullTests
+  only:
+    - branches
+  tags:
+    - windows
+  before_script:
+    - '& echo http://testhistory.autotest.agrohistory.local/$env:CI_PIPELINE_ID'  
+  script:
+    - '& powershell New-Item -ItemType "directory" -Path "${ARTEFACT_BASE}" -Force '
+    - '& powershell Get-ChildItem -Path ${ARTEFACT_BASE} | Remove-Item -Recurse -Confirm:$false -Force'
+    - '& powershell New-Item -ItemType "directory" -Path "${ARTEFACT_BUILDS}"'
+    # скрипты заберём и будем их использовать дальше не из репы и не придётся код чекаутить
+    - '& powershell Copy-Item -Recurse -Path Scripts -Destination $ARTEFACT_SCRIPTS' # прав нету перенести, поэтому копируем
+    - '& "$env:NUGET_PATH" restore agrohistory.PreBuildTests\agrohistory.PreBuildTests.sln'
+    - '& "$env:MSBUILD_PATH" "agrohistory.PreBuildTests\agrohistory.PreBuildTests.sln" /p:platform="Any CPU" /p:configuration="Debug" /clp:ErrorsOnly'
+    - '& "$env:MSTEST_PATH"
+      "agrohistory.PreBuildTests\bin\Debug\agrohistory.PreBuildTests.dll"
+      /Logger:"trx" /ResultsDirectory:"TestResults/PreBuildTests/${CI_JOB_ID}"'
+  after_script:
+    - '& echo http://testhistory.autotest.agrohistory.local/$env:CI_PIPELINE_ID'  
+    - '& "$env:ZIP_PATH" a testresult${CI_JOB_ID}.zip "./TestResults/PreBuildTests/${CI_JOB_ID}/*.*" -r'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\SendReportToTestHistory.ps1 -testResultZip "testresult${CI_JOB_ID}.zip"'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\ConvertTrxToXunit.ps1 "./TestResults/PreBuildTests/${CI_JOB_ID}"'
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 4 week  # save gitlab server space, we copy the files we need to deploy folder later on
+    paths:
+      - TestResults/PreBuildTests/${CI_JOB_ID}/*.xml
+    reports:
+      junit:
+        - TestResults/PreBuildTests/${CI_JOB_ID}/*.xml
+
+Build:
+  needs: ['PreBuild']
+  stage: FullTests
+  only:
+    - branches
+  tags:
+    - windows
+  script:
+    - '& "$env:NUGET_PATH" restore agrohistoryV2.dev.sln'
+    - '& "$env:MSBUILD_PATH" "agrohistoryV2.dev.sln" /p:platform="x64" /p:configuration="Test" /p:DeployOnBuild=true /p:LangVersion=latest /p:WarningLevel=3 /p:SkipInvalidConfigurations=true /clp:ErrorsOnly'
+    # зипуем и забираем основной сайт
+    - '& "$env:ZIP_PATH" a ah.web.zip ".\web.agrohistory.dev\obj\Test\Package\PackageTmp\*" -r'
+    - '& powershell Move-Item -Path ah.web.zip -destination ${ARTEFACT_BUILDS}\ah.web.zip'
+    # забираем мигратор
+    - '& powershell Move-Item -Path agrohistoryv.migration\bin\Test -Destination $MIGRATOR_FOLDER'
+    # забираем тесты
+    - '& powershell New-Item -ItemType Directory -Path $ARTEFACT_INTEGRATION_TESTS'
+    - '& powershell Move-Item -Path agrohistory.CommandsTests\bin\Test -Destination $ARTEFACT_INTEGRATION_TESTS\agrohistory.CommandsTests'
+    - '& powershell Move-Item -Path agrohistory.QueriesTests\bin\Test -Destination $ARTEFACT_INTEGRATION_TESTS\agrohistory.QueriesTests'
+    - '& powershell Move-Item -Path Tests\agrohistory.BusinessLayer.Tests\bin\Debug -Destination $ARTEFACT_INTEGRATION_TESTS\agrohistory.BusinessLayer.Tests'
+    - '& powershell Move-Item -Path web.agrohistory.dev.api.Tests\bin\Test -Destination $ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.api.Tests'
+    - '& powershell Move-Item -Path web.agrohistory.dev.UI.Tests\bin\Test -Destination $ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.UI.Tests'
+    - '& powershell Move-Item -Path web.agrohistory.dev.Triggers.Tests\bin\Test -Destination $ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.Triggers.Tests'
+    ## забираем тесты .net тесты не уживаются рядом с .net framework тестами, нужен даунгрейд
+    #- '& powershell New-Item -ItemType Directory -Path $ARTEFACT_INTEGRATION_CORE_TESTS'
+    #- '& powershell Move-Item -Path StorageClientTests\bin\Debug\net6.0 -Destination $ARTEFACT_INTEGRATION_CORE_TESTS\StorageClientTests'
+    # забираем юнит тесты
+    - '& powershell New-Item -ItemType Directory -Path $ARTEFACT_UNIT_TESTS'
+    - '& powershell Move-Item -Path Helper.UnitTest\bin\Debug -Destination $ARTEFACT_UNIT_TESTS\Helper.UnitTest'
+    - '& powershell Move-Item -Path Tests\agrohistory.Helper.Test\bin\Debug -Destination $ARTEFACT_UNIT_TESTS\agrohistory.Helper.Test'
+    - '& powershell Move-Item -Path Tests\agrohistory.Services.Test\bin\Debug -Destination $ARTEFACT_UNIT_TESTS\agrohistory.Services.Test'
+    - '& powershell Move-Item -Path Tests\agrohistory.BusinessLogic.Test\bin\Debug -Destination $ARTEFACT_UNIT_TESTS\agrohistory.BusinessLogic.Test'
+    - '& powershell Move-Item -Path agrohistory.Model.UnitTest\bin\Debug -Destination $ARTEFACT_UNIT_TESTS\agrohistory.Model.UnitTest'
+    - '& powershell Move-Item -Path agrohistory.Localize.Test\bin\Debug -Destination $ARTEFACT_UNIT_TESTS\agrohistory.Localize.Test'
+    - '& powershell Move-Item -Path ObjectPatcher.Tests\bin\Debug -Destination $ARTEFACT_UNIT_TESTS\ObjectPatcher.Tests'
+    - '& powershell Move-Item -Path web.agrohistory.dev.UnitTest\bin\Debug -Destination $ARTEFACT_UNIT_TESTS\web.agrohistory.dev.UnitTest'
+    # билдим сторагу
+    - '& "$env:NUGET_PATH" restore web.agrohistory.Storage.sln'
+    - '& "$env:MSBUILD_PATH" "web.agrohistory.Storage.sln" /p:platform="x64" /p:configuration="Release" /p:DeployOnBuild=true /p:LangVersion=latest /p:WarningLevel=3 /p:SkipInvalidConfigurations=true /clp:ErrorsOnly'
+    # зипуем и забираем сторагу
+    - '& "$env:ZIP_PATH" a ah.storage.zip ".\web.agrohistory.Storage\bin\Release\net6.0\*" -r'
+    - '& powershell Move-Item -Path ah.storage.zip -destination ${ARTEFACT_BUILDS}\ah.storage.zip'
+    # задаём переменные
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\SetPipelineVariables.ps1 -branch "$CI_COMMIT_BRANCH" -buildNumber "$CI_PIPELINE_ID" -prefix "autotest"' #формирует variable_list.env
+  artifacts:
+    reports:
+      dotenv: variable_list.env #переменные не будут рабить, если шаг не кинуть в зависимости, например needs: ['Build']
+
+Site:
+  needs: ['Build']
+  stage: FullTests
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - branches
+  tags:
+    - windows
+  script:
+    - '& powershell New-Item -ItemType "directory" -Path "${SITE_REMOTE_VM_SHARED_EXTERNAL}\integration-build-artefacts\${BUILD_CLEARED_TASK_NAME}" -Force'
+    - '& powershell Copy-Item -Recurse -Path ${ARTEFACT_BUILDS}\\ah.web.zip -destination ${SITE_REMOTE_VM_SHARED_EXTERNAL}\integration-build-artefacts\${BUILD_CLEARED_TASK_NAME}\'
+    - '& powershell Copy-Item -Path "web.agrohistory.dev\Web.Transform.config" -Destination "web.agrohistory.dev\web.config"'
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunUpdateSiteConfigs.ps1 "web.agrohistory.dev\web.config"'
+    - '& powershell Copy-Item -Force -Path "web.agrohistory.dev\web.config" -Destination "${SITE_REMOTE_VM_SHARED_EXTERNAL}\integration-build-artefacts\${BUILD_CLEARED_TASK_NAME}\ah.web.config"'
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunCreateSite.ps1'
+    - '& powershell Copy-Item -Recurse -Path ${ARTEFACT_BUILDS}\\ah.storage.zip -destination ${SITE_REMOTE_VM_SHARED_EXTERNAL}\integration-build-artefacts\${BUILD_CLEARED_TASK_NAME}\'
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunUpdateStorageSiteConfigs.ps1 "web.agrohistory.Storage\web.config" "web.agrohistory.Storage\appsettings.Development.json"'
+    - '& powershell Copy-Item -Force -Path "web.agrohistory.Storage\web.config" -Destination "${SITE_REMOTE_VM_SHARED_EXTERNAL}\integration-build-artefacts\${BUILD_CLEARED_TASK_NAME}\storage.web.config"'
+    - '& powershell Copy-Item -Force -Path "web.agrohistory.Storage\appsettings.Development.json" -Destination "${SITE_REMOTE_VM_SHARED_EXTERNAL}\integration-build-artefacts\${BUILD_CLEARED_TASK_NAME}\storage.appsettings.Development.json"'
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunCreateStorage.ps1'
+  retry: 2
+
+UnitTests:
+  stage: FullTests
+  needs: ['Build']
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - branches
+  tags:
+    - windows
+  script:
+    - '& "$env:MSTEST_PATH"
+      "$ARTEFACT_UNIT_TESTS\Helper.UnitTest\Helper.UnitTest.dll"
+      "$ARTEFACT_UNIT_TESTS\agrohistory.Helper.Test\agrohistory.Helper.Test.dll"
+      "$ARTEFACT_UNIT_TESTS\agrohistory.Services.Test\agrohistory.Services.Test.dll"
+      "$ARTEFACT_UNIT_TESTS\agrohistory.BusinessLogic.Test\agrohistory.BusinessLogicTest.dll"
+      "$ARTEFACT_UNIT_TESTS\agrohistory.Model.UnitTest\agrohistory.Model.UnitTest.dll"
+      "$ARTEFACT_UNIT_TESTS\agrohistory.Localize.Test\agrohistory.Localize.Test.dll"
+      "$ARTEFACT_UNIT_TESTS\ObjectPatcher.Tests\ObjectPatcher.Tests.dll"
+      "$ARTEFACT_UNIT_TESTS\web.agrohistory.dev.UnitTest\web.agrohistory.dev.UnitTest.dll"
+      /Logger:"trx" /ResultsDirectory:"TestResults/UnitTests/${CI_JOB_ID}"'
+  after_script:
+    - '& "$env:ZIP_PATH" a testresult${CI_JOB_ID}.zip "./TestResults/UnitTests/${CI_JOB_ID}/*.*" -r'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\SendReportToTestHistory.ps1 -testResultZip "testresult${CI_JOB_ID}.zip"'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\ConvertTrxToXunit.ps1 "./TestResults/UnitTests/${CI_JOB_ID}"'
+  artifacts:
+    when: always  # save test results even when the task fails
+    expire_in: 4 week  # save gitlab server space, we copy the files we need to deploy folder later on
+    paths:
+      - TestResults/UnitTests/${CI_JOB_ID}/*.xml
+    reports:
+      junit:
+        - TestResults/UnitTests/${CI_JOB_ID}/*.xml
+
+Database:
+  stage: FullTests
+  needs: ['Build']
+  only:
+    - branches
+  tags:
+    - windows
+  script:
+    - echo "$BUILD_DB_PREFIX"
+    - echo ${CI_PROJECT_DIR}
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunRestoreDb.ps1'
+    - '& "${MIGRATOR_FOLDER}\agrohistoryv.migration.exe" "migrate" "webdb" "Server=${DB_HOST};Port=${DB_PORT};Database=${BUILD_DB_PREFIX}_webdb;Userid=${DB_USER};Password=${DB_PASS}"'
+    - '& "${MIGRATOR_FOLDER}\agrohistoryv.migration.exe" "migrate" "audit" "Server=${DB_HOST};Port=${DB_PORT};Database=${BUILD_DB_PREFIX}_audit;Userid=${DB_USER};Password=${DB_PASS}"'
+    - '& "${MIGRATOR_FOLDER}\agrohistoryv.migration.exe" "migrate" "monitoring" "Server=${DB_HOST};Port=${DB_PORT};Database=${BUILD_DB_PREFIX}_monitoring;Userid=${DB_USER};Password=${DB_PASS}"'
+    - '& "${MIGRATOR_FOLDER}\agrohistoryv.migration.exe" "migrate" "geometries" "Server=${DB_HOST};Port=${DB_PORT};Database=${BUILD_DB_PREFIX}_geometries;Userid=${DB_USER};Password=${DB_PASS}"'
+    - '& "${MIGRATOR_FOLDER}\agrohistoryv.migration.exe" "inittestdata" "webdb" "Server=${DB_HOST};Port=${DB_PORT};Database=${BUILD_DB_PREFIX}_webdb;Userid=${DB_USER};Password=${DB_PASS}" "${CI_PROJECT_DIR}\Scripts\TestData\webdb"'
+  retry: 2
+
+ApiTests:
+  stage: FullTests
+  needs: ['Build', 'Database', 'Site']
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - branches
+  tags:
+    - windows
+  script:
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunUpdateApiTestsConfigs.ps1 "$ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.api.Tests\web.agrohistory.dev.Api.Tests.dll.config" "D:\\RunTests\ApiTests"'
+    - '& "$env:MSTEST_PATH" "$ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.api.Tests\web.agrohistory.dev.API.Tests.dll"
+       /Logger:"trx" /ResultsDirectory:"TestResults/ApiTests/${CI_JOB_ID}"'
+  after_script:
+    - '& "$env:ZIP_PATH" a testresult${CI_JOB_ID}.zip "./TestResults/ApiTests/${CI_JOB_ID}/*.*" -r'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\SendReportToTestHistory.ps1 -testResultZip "testresult${CI_JOB_ID}.zip"'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\ConvertTrxToXunit.ps1 "./TestResults/ApiTests/${CI_JOB_ID}"'
+  artifacts:
+    when: always
+    expire_in: 4 week
+    paths:
+      - TestResults/ApiTests/${CI_JOB_ID}/*.xml
+    reports:
+      junit:
+        - TestResults/ApiTests/${CI_JOB_ID}/*.xml
+
+UiTests:
+  stage: FullTests
+  needs: ['Build', 'Database', 'Site']
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - branches
+  tags:
+    - windows
+  script:
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunUpdateUiTestsConfigs.ps1 "$ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.UI.Tests\web.agrohistory.dev.UI.Tests.dll.config"'
+    - '& "$env:MSTEST_PATH" "$ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.UI.Tests\web.agrohistory.dev.UI.Tests.dll"
+       /Logger:"trx" /ResultsDirectory:"TestResults/UiTests/${CI_JOB_ID}"'
+  after_script:
+    - '& "$env:ZIP_PATH" a testresult${CI_JOB_ID}.zip "./TestResults/UiTests/${CI_JOB_ID}/*.*" -r'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\SendReportToTestHistory.ps1 -testResultZip "testresult${CI_JOB_ID}.zip"'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\ConvertTrxToXunit.ps1 "./TestResults/UiTests/${CI_JOB_ID}"'
+  artifacts:
+    when: always
+    expire_in: 4 week
+    paths:
+      - TestResults/UiTests/${CI_JOB_ID}/*.xml
+    reports:
+      junit:
+        - TestResults/UiTests/${CI_JOB_ID}/*.xml
+
+TriggerTests:
+  stage: FullTests
+  needs: ['Build', 'Database', 'Site']
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - branches
+  tags:
+    - windows
+  script:
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunUpdateTriggersTestsConfigs.ps1 "$ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.Triggers.Tests\web.agrohistory.dev.Triggers.Tests.dll.config"'
+    - '& "$env:MSTEST_PATH" "$ARTEFACT_INTEGRATION_TESTS\web.agrohistory.dev.Triggers.Tests\web.agrohistory.dev.Triggers.Tests.dll"
+       /Logger:"trx" /ResultsDirectory:"TestResults/TriggerTests/${CI_JOB_ID}"'
+  after_script:
+    - '& "$env:ZIP_PATH" a testresult${CI_JOB_ID}.zip "./TestResults/TriggerTests/${CI_JOB_ID}/*.*" -r'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\SendReportToTestHistory.ps1 -testResultZip "testresult${CI_JOB_ID}.zip"'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\ConvertTrxToXunit.ps1 "./TestResults/TriggerTests/${CI_JOB_ID}"'
+  artifacts:
+    when: always
+    expire_in: 4 week
+    paths:
+      - TestResults/TriggerTests/${CI_JOB_ID}/*.xml
+    reports:
+      junit:
+        - TestResults/TriggerTests/${CI_JOB_ID}/*.xml
+
+IntegrationTests:
+  stage: FullTests
+  needs: ['Build', 'Database']
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - branches
+  tags:
+    - windows
+  script:
+    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunUpdateIntegrationTestsConfigs.ps1 "$ARTEFACT_INTEGRATION_TESTS"'
+    - '& "$env:MSTEST_PATH" "$ARTEFACT_INTEGRATION_TESTS\agrohistory.CommandsTests\agrohistory.CommandsTests.dll"
+       $ARTEFACT_INTEGRATION_TESTS\agrohistory.QueriesTests\agrohistory.QueriesTests.dll
+       $ARTEFACT_INTEGRATION_TESTS\agrohistory.BusinessLayer.Tests\agrohistory.BusinessLayer.Tests.dll
+       /Logger:"trx" /ResultsDirectory:"TestResults/IntegrationTests/${CI_JOB_ID}"'
+  after_script:
+    - '& "$env:ZIP_PATH" a testresult${CI_JOB_ID}.zip "./TestResults/IntegrationTests/${CI_JOB_ID}/*.*" -r'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\SendReportToTestHistory.ps1 -testResultZip "testresult${CI_JOB_ID}.zip"'
+    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\ConvertTrxToXunit.ps1 "./TestResults/IntegrationTests/${CI_JOB_ID}"'
+  artifacts:
+    when: always
+    expire_in: 4 week
+    paths:
+      - TestResults/IntegrationTests/${CI_JOB_ID}/*.xml
+    reports:
+      junit:
+        - TestResults/IntegrationTests/${CI_JOB_ID}/*.xml
+
+#IntegrationCoreTests:
+#  stage: FullTests
+#  needs: ['Build', 'Database', 'Site']
+#  variables:
+#    GIT_STRATEGY: none
+#  only:
+#    - branches
+#  tags:
+#    - windows
+#  script:
+#    - '& powershell -File $ARTEFACT_SCRIPTS\Gitlab\TestRunUpdateIntegrationCoreTestsConfigs.ps1 "$ARTEFACT_INTEGRATION_CORE_TESTS"'
+#    - '& "$env:MSTEST_PATH" "$ARTEFACT_INTEGRATION_CORE_TESTS\StorageClientTests\StorageClientTests.dll"
+#       /Logger:"trx" /ResultsDirectory:"TestResults/IntegrationCoreTests/${CI_JOB_ID}"'
+#  after_script:
+#    - '& "$env:ZIP_PATH" a testresult${CI_JOB_ID}.zip "./TestResults/IntegrationCoreTests/${CI_JOB_ID}/*.*" -r'
+#    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\SendReportToTestHistory.ps1 -testResultZip "testresult${CI_JOB_ID}.zip"'
+#    - '& powershell -File ${ARTEFACT_SCRIPTS}\Gitlab\ConvertTrxToXunit.ps1 "./TestResults/IntegrationCoreTests/${CI_JOB_ID}"'
+#  artifacts:
+#    when: always
+#    expire_in: 4 week
+#    paths:
+#      - TestResults/IntegrationCoreTests/${CI_JOB_ID}/*.xml
+#    reports:
+#      junit:
+#        - TestResults/IntegrationCoreTests/${CI_JOB_ID}/*.xml
