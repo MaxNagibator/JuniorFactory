@@ -7,9 +7,14 @@ internal static partial class Program
 {
     private static void Main()
     {
-        string repoName = "JuniorFactory";
-        string location = Assembly.GetExecutingAssembly().Location;
-        string directory = location[..(location.IndexOf(repoName, StringComparison.InvariantCultureIgnoreCase) + repoName.Length)];
+        string directory = "";
+
+        if (Directory.Exists(directory) == false)
+        {
+            string repoName = "JuniorFactory";
+            string location = Assembly.GetExecutingAssembly().Location;
+            directory = location[..(location.LastIndexOf(repoName, StringComparison.InvariantCultureIgnoreCase) + repoName.Length)];
+        }
 
         IEnumerable<string> folders = Directory
             .EnumerateDirectories(directory)
@@ -54,17 +59,16 @@ internal static partial class Program
 
                 foreach (string line in lines)
                 {
-                    if (isTitleBefore && string.IsNullOrWhiteSpace(line))
+                    if (isTitleBefore && string.IsNullOrWhiteSpace(line) == false)
                     {
-                        Console.WriteLine("Удалена пустая строка после заголовка");
-                        continue;
+                        outputFile.WriteLine();
+                        Console.WriteLine("Добавлена пустая строка после заголовка");
                     }
 
                     if (line.StartsWith('•'))
                     {
                         string updatedLine = "-" + line[1..];
                         outputFile.WriteLine(updatedLine);
-                        Console.WriteLine($"Обновлена строка: {updatedLine}");
                         isTitleBefore = false;
                         continue;
                     }
@@ -79,7 +83,6 @@ internal static partial class Program
                         if (line.Contains(']'))
                         {
                             outputFile.WriteLine(line);
-                            //Console.WriteLine($"Строка уже изменена: {line}");
                         }
                         else
                         {
@@ -124,9 +127,23 @@ internal static partial class Program
     private static string TimeCodeToSeconds(string timeCode)
     {
         string[] parts = timeCode.Split(':');
-        int hours = parts.Length == 3 ? int.Parse(parts[0]) : 0;
-        int minutes = parts.Length == 3 ? int.Parse(parts[1]) : int.Parse(parts[0]);
-        int seconds = parts.Length == 3 ? int.Parse(parts[2]) : int.Parse(parts[1]);
+        int hours;
+        int minutes;
+        int seconds;
+
+        if (parts.Length == 3)
+        {
+            hours = int.Parse(parts[0]);
+            minutes = int.Parse(parts[1]);
+            seconds = int.Parse(parts[2]);
+        }
+        else
+        {
+            hours = 0;
+            minutes = int.Parse(parts[0]);
+            seconds = int.Parse(parts[1]);
+        }
+
         return (hours * 3600 + minutes * 60 + seconds).ToString();
     }
 
