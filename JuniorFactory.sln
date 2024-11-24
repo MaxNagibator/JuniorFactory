@@ -45,6 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JuniorFactory.Lesson5.UnitT
 		JuniorFactory.Lesson5.UnitTests\README.md = JuniorFactory.Lesson5.UnitTests\README.md
 		JuniorFactory.Lesson5.UnitTests\video.md = JuniorFactory.Lesson5.UnitTests\video.md
 	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuniorFactory.Lesson5.NunitTests", "JuniorFactory.Lesson5.UnitTests\JuniorFactory.Lesson5.NunitTests\JuniorFactory.Lesson5.NunitTests.csproj", "{A8B4B0C7-CD1F-4CD7-BE7C-552F7D7127F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuniorFactory.Lesson5.Tests", "JuniorFactory.Lesson5.UnitTests\JuniorFactory.Lesson5Tests\JuniorFactory.Lesson5.Tests.csproj", "{A30563C1-528A-4E49-94FF-B1DFFB010B62}"
@@ -101,6 +102,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JuniorFactory.Lesson11.Thre
 		JuniorFactory.Lesson11.Threads\video.md = JuniorFactory.Lesson11.Threads\video.md
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuniorFactory.Lesson11", "JuniorFactory.Lesson11.Threads\JuniorFactory.Lesson11\JuniorFactory.Lesson11.csproj", "{2E721B41-A518-4FE8-BA8E-94BF1EDF13FE}"
 	EndProjectSection
+EndProject
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formatter", "Formatter\Formatter.csproj", "{1B659CC7-CD91-4E9A-8D74-6DDB674FD6D7}"
 EndProject
 
 Global
