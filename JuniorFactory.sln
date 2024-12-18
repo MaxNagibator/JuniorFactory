@@ -96,6 +96,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JuniorFactory.Lesson13.Linq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domiki.Web", "JuniorFactory.Lesson13.LinqEf\Domiki\Domiki.Web.csproj", "{F2EDA658-FA8D-475A-9F14-616F97286D50}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Formatter", "Formatter\Formatter.csproj", "{1B659CC7-CD91-4E9A-8D74-6DDB674FD6D7}"
+EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
