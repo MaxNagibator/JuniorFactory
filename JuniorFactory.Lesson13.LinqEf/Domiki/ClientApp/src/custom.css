@@ -1,0 +1,132 @@
+/* Provide sufficient contrast against white background */
+a {
+    color: #0366d6;
+}
+
+code {
+    color: #E01A76;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.break {
+    flex-basis: 100%;
+    height: 0;
+}
+
+.workspace {
+    display: flex;
+    flex-direction: row;
+}
+
+.actions {
+    display: flex;
+    width: 30%;
+    flex-wrap: wrap;
+}
+
+.domiks {
+    display: flex;
+    width: 70%;
+    flex-wrap: wrap;
+}
+
+    .domiks .domik-box {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100px;
+        cursor: pointer;
+    }
+
+        .domiks .domik-box .domik-level {
+            /* position: absolute;*/
+            background: green;
+            color: white;
+            padding: 0 5px;
+        }
+
+        .domiks .domik-box img {
+            max-width: 64px;
+            max-height: 64px;
+        }
+
+        .domiks .domik-box .manufacture-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+.purchase-box {
+    display: flex;
+}
+    .purchase-box .domik-box {
+        width: 100px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+.resources {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+    .resources .resource-box {
+        display: flex;
+        flex-wrap: wrap;
+        width: 50px;
+    }
+
+        .resources .resource-box img {
+            max-width: 32px;
+            max-height: 32px;
+        }
+
+.upgrade-box {
+    padding-bottom: 10px;
+}
+
+.manufacture-box {
+    border: 1px solid darkgray;
+    border-radius: 5px;
+    margin: 1px;
+    padding: 5px;
+}
+
+progress {
+    text-align: center;
+    height: 1.5em;
+    width: 100%;
+    -webkit-appearance: none;
+    border: none;
+    /* Set the progressbar to relative */
+    position: relative;
+}
+
+    progress:before {
+        content: attr(data-label);
+        font-size: 0.8em;
+        vertical-align: 0;
+        /*Position text over the progress bar */
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+
+    progress::-webkit-progress-bar {
+        background-color: #c9c9c9;
+    }
+
+    progress::-webkit-progress-value {
+        background-color: #7cc4ff;
+    }
+
+    progress::-moz-progress-bar {
+        background-color: #7cc4ff;
+    }
+
+.hidden {
+    display: none;
+}
