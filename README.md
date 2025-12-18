@@ -107,6 +107,9 @@ YouTube-канал ["Лучик света продуктовой разрабо
 
 13. **[EF/ORM](JuniorFactory.Lesson13.LinqEf)**  
     Что такое ORM. Entity framework.
+	
+14. **[Selenium](JuniorFactory.Lesson14.Selenium)**  
+    Знакомство с Selenium.
 
 ## Как использовать этот курс
 
