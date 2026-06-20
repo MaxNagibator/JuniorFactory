@@ -69,32 +69,32 @@ YouTube-канал ["Лучик света продуктовой разрабо
 
 ## Содержание курса
 
-1. **[Знакомство с C#](JuniorFactory.Lesson1.Base)**  
+1. **[Знакомство с C#](JuniorFactory.Lesson01.Base)**  
    Основы языка C#, включая типы данных, циклы, условия, объекты и массивы.
 
-2. **[Хранение данных](JuniorFactory.Lesson2.DataStorage)**  
+2. **[Хранение данных](JuniorFactory.Lesson02.DataStorage)**  
    Способы хранения данных: работа с файлами и простыми интерфейсами, такими как Windows Forms.
 
-3. **[Основы Git](JuniorFactory.Lesson3.Git)**  
+3. **[Основы Git](JuniorFactory.Lesson03.Git)**  
    Введение в контроль версий с Git: коммиты, ветки, слияние и решение конфликтов.
 
-4. **[Основы PostgreSQL](JuniorFactory.Lesson4.Postgres)**  
+4. **[Основы PostgreSQL](JuniorFactory.Lesson04.Postgres)**  
    Работа с реляционными базами данных: установка PostgreSQL, создание таблиц и выполнение запросов.
 
-5. **[Основы юнит-тестирования](JuniorFactory.Lesson5.UnitTests)**  
+5. **[Основы юнит-тестирования](JuniorFactory.Lesson05.UnitTests)**  
    Написание и использование юнит-тестов в .NET, работа с фреймворками тестирования.
 
-6. **[Основы HTML, CSS и JavaScript](JuniorFactory.Lesson6.Frontend)**  
+6. **[Основы HTML, CSS и JavaScript](JuniorFactory.Lesson06.Frontend)**  
    Основы веб-разработки: создание структурированных веб-страниц с HTML, стилизация с CSS и добавление интерактивности с
    JavaScript.
 
-7. **[Принцип открытости/закрытости и паттерн "Стратегия"](JuniorFactory.Lesson7.OCP)**  
+7. **[Принцип открытости/закрытости и паттерн "Стратегия"](JuniorFactory.Lesson07.OCP)**  
    Понимание принципа открытости/закрытости и применение паттерна "Стратегия" на примере консольного приложения.
 
-8. **[ASP.NET Web API](JuniorFactory.Lesson8.WebApi)**  
+8. **[ASP.NET Web API](JuniorFactory.Lesson08.WebApi)**  
    Создание веб-API с ASP.NET Core: настройка контроллеров, тестирование и обеспечение безопасности.
 
-9. **[Работа с файлами](JuniorFactory.Lesson9.Files)**  
+9. **[Работа с файлами](JuniorFactory.Lesson09.Files)**  
    Создание приложения для анализа файлов на жестком диске, изучение работы с файловой системой.
 
 10. **[Работа с XML и CSV](JuniorFactory.Lesson10.XmlCSV)**  
