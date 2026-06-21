@@ -13,6 +13,10 @@
 
 Видео-урок по этой теме: [.net помойка / JuniorFactory / 6. Основы js css html](https://www.youtube.com/watch?v=ciyE87yIXWY)
 
+Резервная копия (Rutube): [6. HTML, CSS и JavaScript](https://rutube.ru/video/18d229b0adbae74379dc11c648e150d4/)
+
+Резервная копия (VK Видео): [6. HTML, CSS и JavaScript](https://vkvideo.ru/video-227746634_456239033)
+
 ---
 
 [← 5. Юнит-тесты](../JuniorFactory.Lesson05.UnitTests) · [Оглавление](../README.md) · [7. Принцип открытости/закрытости →](../JuniorFactory.Lesson07.OCP)

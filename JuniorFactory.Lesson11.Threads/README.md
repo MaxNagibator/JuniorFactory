@@ -19,6 +19,10 @@
 
 [.net помойка / JuniorFactory / 11. Async Parallel](https://www.youtube.com/watch?v=mwKHjZm1oNQ)
 
+Резервная копия (Rutube): [11. Асинхронность](https://rutube.ru/video/221339c9b646ea9036df644b3622e88a/)
+
+Резервная копия (VK Видео): [11. Асинхронность](https://vkvideo.ru/video-227746634_456239039)
+
 ---
 
 [← 10. XML и CSV](../JuniorFactory.Lesson10.XmlCSV) · [Оглавление](../README.md) · [12. CI/CD →](../JuniorFactory.Lesson12.CI_CD)

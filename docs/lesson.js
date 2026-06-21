@@ -1,6 +1,6 @@
 ﻿(function () {
   "use strict";
-  var VIDEO_ID = LESSON.videoId, BLOCKS = LESSON.blocks || [], TITLE = LESSON.title;
+  var VIDEO_ID = LESSON.videoId, RUTUBE_ID = LESSON.rutubeId, VK = LESSON.vk, BLOCKS = LESSON.blocks || [], TITLE = LESSON.title;
   var facade = document.getElementById("facade"), playerEl = document.getElementById("player"),
       listEl = document.getElementById("tocList"), searchEl = document.getElementById("tocSearch"),
       countEl = document.getElementById("tocCount"), emptyEl = document.getElementById("tocEmpty"),
@@ -9,7 +9,7 @@
       beltDone = document.getElementById("beltDone"),
       gaugeDone = document.getElementById("gaugeDone"), gaugeTotal = document.getElementById("gaugeTotal"),
       gaugeFill = document.getElementById("gaugeFill"), gaugeBar = document.getElementById("gaugeBar");
-  var iframe = null, nodes = [];
+  var iframe = null, nodes = [], platform = "yt", curStart = 0;
 
   if (gaugeTotal) gaugeTotal.textContent = BLOCKS.length;
   if (gaugeBar) gaugeBar.setAttribute("aria-valuemax", BLOCKS.length);
@@ -38,11 +38,19 @@
   }
 
   function srcFor(start, autoplay) {
-    var u = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID + "?rel=0&modestbranding=1&playsinline=1&start=" + (start || 0);
+    start = start || 0;
+    if (platform === "rt") {
+      return "https://rutube.ru/play/embed/" + RUTUBE_ID + "/?t=" + start + (autoplay ? "&autoplay=true" : "");
+    }
+    if (platform === "vk") {
+      return "https://vkvideo.ru/video_ext.php?oid=" + VK.o + "&id=" + VK.i + "&t=" + start + "s" + (autoplay ? "&autoplay=1" : "");
+    }
+    var u = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID + "?rel=0&modestbranding=1&playsinline=1&start=" + start;
     if (autoplay) u += "&autoplay=1";
     return u;
   }
   function ensureIframe(start) {
+    curStart = start || 0;
     if (!iframe) {
       iframe = document.createElement("iframe");
       iframe.setAttribute("title", TITLE + " — видео урока");
@@ -86,6 +94,17 @@
     if (blk) setActive(i);
   }
   if (facade) facade.addEventListener("click", function () { play(BLOCKS.length ? 0 : -1); });
+
+  var switchEl = document.getElementById("srcSwitch");
+  if (switchEl) {
+    switchEl.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-src]");
+      if (!b || b.dataset.src === platform) return;
+      platform = b.dataset.src;
+      switchEl.querySelectorAll(".src-btn").forEach(function (x) { x.classList.toggle("is-active", x === b); });
+      if (iframe) ensureIframe(curStart);
+    });
+  }
 
   if (searchEl && listEl) {
     searchEl.addEventListener("input", function () {

@@ -17,6 +17,10 @@
 
 Видео-урок по этой теме: [.net помойка / JuniorFactory / 2. Хранение данных](https://www.youtube.com/watch?v=L2q-32fki6A)
 
+Резервная копия (Rutube): [2. Хранение данных](https://rutube.ru/video/6db3511c1ec652e5e012c5db8dee1b9d/)
+
+Резервная копия (VK Видео): [2. Хранение данных](https://vkvideo.ru/video-227746634_456239031)
+
 ---
 
 [← 1. Знакомство с C#](../JuniorFactory.Lesson01.Base) · [Оглавление](../README.md) · [3. Основы Git →](../JuniorFactory.Lesson03.Git)

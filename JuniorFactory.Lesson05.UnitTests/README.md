@@ -14,6 +14,10 @@
 
 Видео-урок по этой теме: [.net помойка / JuniorFactory / 5. Основы юниттестов](https://www.youtube.com/watch?v=Soy_edNRgco)
 
+Резервная копия (Rutube): [5. Юнит-тестирование](https://rutube.ru/video/73ccfe0334d58ee442680951c16ae95e/)
+
+Резервная копия (VK Видео): [5. Юнит-тестирование](https://vkvideo.ru/video-227746634_456239032)
+
 Видео-урок по теме тестов от друга нашего канала: https://www.youtube.com/watch?v=_R6GGGDkrw0
 
 ---

@@ -14,6 +14,10 @@
 
 Видео-урок по этой теме: [.net помойка / JuniorFactory / 1. Знакомство с C#](https://www.youtube.com/watch?v=F3ScyGmNt5Y)
 
+Резервная копия (Rutube): [1. Знакомство с C#](https://rutube.ru/video/f4cc8b45426edf1bf21906ee67819ccc/)
+
+Резервная копия (VK Видео): [1. Знакомство с C#](https://vkvideo.ru/video-227746634_456239028)
+
 ---
 
 [Оглавление](../README.md) · [2. Хранение данных →](../JuniorFactory.Lesson02.DataStorage)

@@ -14,6 +14,10 @@
 
 Видео-урок по этой теме: [.net помойка / JuniorFactory / 7. Принцип открытости закрытости](https://www.youtube.com/watch?v=kvd5kL5T-os)
 
+Резервная копия (Rutube): [7. OCP и «Стратегия»](https://rutube.ru/video/5f5279fedaa2dd29570f548d2b340783/)
+
+Резервная копия (VK Видео): [7. OCP и «Стратегия»](https://vkvideo.ru/video-227746634_456239034)
+
 ---
 
 [← 6. HTML, CSS и JavaScript](../JuniorFactory.Lesson06.Frontend) · [Оглавление](../README.md) · [8. ASP.NET Web API →](../JuniorFactory.Lesson08.WebApi)

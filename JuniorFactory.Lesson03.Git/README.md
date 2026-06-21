@@ -15,6 +15,10 @@ SSH ключ на коленке к githubу добавили.
 
 Видео-уроки по этой теме: [.net помойка / JuniorFactory / 3. Основы git](https://www.youtube.com/watch?v=e414Uc598W8)
 
+Резервная копия (Rutube): [3. Основы Git](https://rutube.ru/video/0001026279aa4f4198679af29c988331/)
+
+Резервная копия (VK Видео): [3. Основы Git](https://vkvideo.ru/video-227746634_456239030)
+
 [.net помойка / JuniorFactory / 3. Git Reset/Revert Commit](https://www.youtube.com/watch?v=eOfO8nDwksc)
 
 ---

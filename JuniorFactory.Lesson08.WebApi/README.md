@@ -15,6 +15,10 @@
 
 Видео-урок по этой теме: [.net помойка / JuniorFactory / 8. asp net web api](https://www.youtube.com/watch?v=Y2hfL8tul_o)
 
+Резервная копия (Rutube): [8. ASP.NET Web API](https://rutube.ru/video/2c734f5b313592433753b5db9950302a/)
+
+Резервная копия (VK Видео): [8. ASP.NET Web API](https://vkvideo.ru/video-227746634_456239035)
+
 ---
 
 [← 7. Принцип открытости/закрытости](../JuniorFactory.Lesson07.OCP) · [Оглавление](../README.md) · [9. Работа с файлами →](../JuniorFactory.Lesson09.Files)

@@ -17,6 +17,10 @@ https://github.com/MaxNagibator/Solyanka
 
 Видео-урок по этой теме: [.net помойка / JuniorFactory / 10. Xml CSV read write](https://www.youtube.com/watch?v=CqmaB5hHZ5k)
 
+Резервная копия (Rutube): [10. XML и CSV](https://rutube.ru/video/2211d86bb6e9b0e8d0fe28ffd156663a/)
+
+Резервная копия (VK Видео): [10. XML и CSV](https://vkvideo.ru/video-227746634_456239038)
+
 ---
 
 [← 9. Работа с файлами](../JuniorFactory.Lesson09.Files) · [Оглавление](../README.md) · [11. Асинхронность и параллелизм →](../JuniorFactory.Lesson11.Threads)

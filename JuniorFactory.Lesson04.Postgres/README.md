@@ -13,6 +13,10 @@
 
 Видео-урок по этой теме: [.net помойка / JuniorFactory / 4. Основы PostgreSQL](https://www.youtube.com/watch?v=nmDF2z3StxA)
 
+Резервная копия (Rutube): [4. Основы PostgreSQL](https://rutube.ru/video/57f0e8dbb81133db1e346e87078b60df/)
+
+Резервная копия (VK Видео): [4. Основы PostgreSQL](https://vkvideo.ru/video-227746634_456239029)
+
 ---
 
 [← 3. Основы Git](../JuniorFactory.Lesson03.Git) · [Оглавление](../README.md) · [5. Юнит-тесты →](../JuniorFactory.Lesson05.UnitTests)

@@ -50,6 +50,16 @@ function extractVideoId(readme) {
   return m ? m[1] : null;
 }
 
+function extractRutubeId(readme) {
+  const m = readme.match(/rutube\.ru\/(?:video|play\/embed)\/([a-f0-9]{16,})/i);
+  return m ? m[1] : null;
+}
+
+function extractVk(readme) {
+  const m = readme.match(/vk(?:video)?\.(?:ru|com)\/video(-?\d+)_(\d+)/i);
+  return m ? { o: m[1], i: m[2] } : null;
+}
+
 function parseVideoMd(text) {
   const blocks = [];
   let cur = null;
@@ -159,7 +169,7 @@ const NO_NOTES = `<section class="sector" aria-label="Конспект">
 </section>`;
 
 function lessonPage(l, ctx, css, js) {
-  const { title, titleShort, descHtml, videoId, blocks, prev, next } = ctx;
+  const { title, titleShort, descHtml, videoId, rutubeId, vk, blocks, prev, next } = ctx;
   const chrono = blocks.length ? blocks[blocks.length - 1].t : null;
   const fullTitle = `${title} — Юниорная Мануфактура`;
   const thumb = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
@@ -173,7 +183,10 @@ function lessonPage(l, ctx, css, js) {
   const tagsHtml = l.tags.map(t => `<span class="tag-chip">${esc(t)}</span>`).join("");
   const tapeRight = `${l.n}. ${l.tags.join(" / ")}${chrono ? " · " + chrono : ""}`;
 
-  const lessonData = jsonInline({ videoId, title, blocks });
+  const lessonData = jsonInline({ videoId, rutubeId, vk, title, blocks });
+  const altBtns = (rutubeId ? `<button type="button" class="src-btn" data-src="rt">RuTube</button>` : "")
+    + (vk ? `<button type="button" class="src-btn" data-src="vk">VK Видео</button>` : "");
+  const srcSwitch = altBtns ? `<div class="src-switch" id="srcSwitch" role="group" aria-label="Источник видео"><button type="button" class="src-btn is-active" data-src="yt">YouTube</button>${altBtns}</div>` : "";
 
   return `<!doctype html>
 <html lang="ru">
@@ -224,6 +237,7 @@ ${HEADER}
 <div class="sector-head"><span class="num">// СЕКТОР A</span><span class="title">Видеозапись смены</span><span class="meta">YT · ${esc(videoId)}</span></div>
 <div class="player-body">
 <div class="player-status"><span>ПУЛЬТ ОПЕРАТОРА</span><span class="ps-state" id="psState">ГОТОВ К ЗАПУСКУ</span></div>
+${srcSwitch}
 <div class="player" id="player">
 <button class="facade" id="facade" type="button" aria-label="Запустить видео: ${esc(title)}">
 <img src="${thumb}" alt="" loading="lazy" width="480" height="360">
@@ -301,13 +315,15 @@ for (let i = 0; i < LESSONS.length; i++) {
     console.warn(`! ${l.slug}: videoId не найден, пропуск`);
     continue;
   }
+  const rutubeId = extractRutubeId(readme);
+  const vk = extractVk(readme);
   const { title, titleShort, descHtml } = renderReadme(readme);
   let blocks = [];
   try {
     blocks = parseVideoMd(await readFile(`../${l.slug}/video.md`, "utf8"));
   } catch { /* no video.md — конспекта не будет */ }
 
-  const ctx = { title, titleShort, descHtml, videoId, blocks, prev: LESSONS[i - 1] || null, next: LESSONS[i + 1] || null };
+  const ctx = { title, titleShort, descHtml, videoId, rutubeId, vk, blocks, prev: LESSONS[i - 1] || null, next: LESSONS[i + 1] || null };
   const html = await minify(lessonPage(l, ctx, cssLesson, lessonJs), minOpts);
   await writeFile(`${OUT}/lessons/${l.n}.html`, html);
   built++;
