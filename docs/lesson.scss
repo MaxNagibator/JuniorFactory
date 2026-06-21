@@ -123,6 +123,8 @@
 .sector-head .num { font-family: $mono; color: var(--amber); font-size: 12px; letter-spacing: .2em; }
 .sector-head .title { font-family: $head; font-weight: 600; text-transform: uppercase; letter-spacing: 1.4px; font-size: 14px; }
 .sector-head .meta { margin-left: auto; font-family: $mono; font-size: 11px; color: var(--ink-faint); letter-spacing: .12em; }
+.sector-head a.meta { text-decoration: none; transition: color .15s; }
+.sector-head a.meta:hover { color: var(--amber); }
 
 .player-body { padding: 14px; }
 .player-status {

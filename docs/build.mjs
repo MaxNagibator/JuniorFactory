@@ -263,7 +263,7 @@ ${HEADER}
 <div class="sheet">
 <div class="col-left">
 <section class="sector" aria-label="Видео урока">
-<div class="sector-head"><span class="num">// СЕКТОР A</span><span class="title">Видеозапись смены</span><span class="meta">YT · ${esc(videoId)}</span></div>
+<div class="sector-head"><span class="num">// СЕКТОР A</span><span class="title">Видеозапись смены</span><a class="meta" id="srcMeta" href="https://youtu.be/${esc(videoId)}" target="_blank" rel="noopener">YT · ${esc(videoId)}</a></div>
 <div class="player-body">
 <div class="player-status"><span>ПУЛЬТ ОПЕРАТОРА</span><span class="ps-state" id="psState">ГОТОВ К ЗАПУСКУ</span></div>
 ${srcSwitch}

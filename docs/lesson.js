@@ -95,6 +95,17 @@
   }
   if (facade) facade.addEventListener("click", function () { play(BLOCKS.length ? 0 : -1); });
 
+  var metaEl = document.getElementById("srcMeta");
+  function updateMeta() {
+    if (!metaEl) return;
+    var label, code, href;
+    if (platform === "rt") { label = "RT"; code = RUTUBE_ID; href = "https://rutube.ru/video/" + RUTUBE_ID + "/"; }
+    else if (platform === "vk") { label = "VK"; code = VK.o + "_" + VK.i; href = "https://vkvideo.ru/video" + code; }
+    else { label = "YT"; code = VIDEO_ID; href = "https://youtu.be/" + VIDEO_ID; }
+    metaEl.textContent = label + " · " + code;
+    metaEl.href = href;
+  }
+
   var switchEl = document.getElementById("srcSwitch");
   if (switchEl) {
     var PKEY = "jf:platform";
@@ -112,9 +123,11 @@
       platform = b.dataset.src;
       try { localStorage.setItem(PKEY, platform); } catch (e) {}
       switchEl.querySelectorAll(".src-btn").forEach(function (x) { x.classList.toggle("is-active", x === b); });
+      updateMeta();
       if (iframe) ensureIframe(curStart);
     });
   }
+  updateMeta();
 
   if (searchEl && listEl) {
     searchEl.addEventListener("input", function () {
