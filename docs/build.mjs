@@ -2,6 +2,7 @@
 import { minify } from "html-minifier-terser";
 import * as sass from "sass";
 import MarkdownIt from "markdown-it";
+import { createHighlighter } from "shiki";
 
 const OUT = "dist";
 const SITE = "https://maxnagibator.github.io/JuniorFactory";
@@ -27,7 +28,24 @@ const LESSONS = [
 
 const beltWords = ["C#",".NET","GIT","POSTGRESQL","ТЕСТЫ","HTML/CSS/JS","SOLID","ASP.NET","ФАЙЛЫ","XML/CSV","ASYNC","CI/CD","EF CORE","SELENIUM","PLAYWRIGHT"];
 
-const mdit = new MarkdownIt({ html: false, linkify: false, typographer: false });
+const CODE = {
+  "01": ["JuniorFactory.Lesson01/Program.cs"],
+  "03": ["JuniorFactory.Lesson03/Program.cs"],
+  "07": ["JuniorFactory.Lesson07/Program.cs"],
+  "10": ["JuniorFactory.Lesson10/XmlPomogator.cs"],
+  "11": ["JuniorFactory.Lesson11/AsyncWorker.cs", "JuniorFactory.Lesson11/ParallelWorker.cs"],
+};
+const EXT_LANG = { cs:"csharp", js:"javascript", html:"html", css:"css", json:"json", xml:"xml", sql:"sql" };
+
+const THEME = "vitesse-dark";
+const highlighter = await createHighlighter({ themes: [THEME], langs: Object.values(EXT_LANG).concat("bash") });
+const LANG_LOADED = new Set(highlighter.getLoadedLanguages());
+const codeToHtml = (code, lang) => highlighter.codeToHtml(code, { lang: LANG_LOADED.has(lang) ? lang : "text", theme: THEME });
+
+const mdit = new MarkdownIt({
+  html: false, linkify: false, typographer: false,
+  highlight: (code, lang) => codeToHtml(code, lang),
+});
 const TOTAL = LESSONS.length;
 
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -168,8 +186,17 @@ const NO_NOTES = `<section class="sector" aria-label="Конспект">
 <div class="no-notes">Интерактивный конспект для этого урока пока не готов — <b>смотрите видео целиком</b>.</div>
 </section>`;
 
+function codeSector(files, ghUrl) {
+  const meta = files.length === 1 ? esc(files[0].name) : `${files.length} ${plural(files.length, ["файл", "файла", "файлов"])}`;
+  const body = files.map(f => `<figure class="code-file"><figcaption>${esc(f.name)}</figcaption>${f.html}</figure>`).join("");
+  return `<section class="sector" aria-label="Исходный код урока">
+<div class="sector-head"><span class="num">// СЕКТОР D</span><span class="title">Исходный код</span><span class="meta">${meta}</span></div>
+<div class="code-body">${body}<a class="code-more" href="${ghUrl}" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-github"/></svg>Весь код урока на GitHub</a></div>
+</section>`;
+}
+
 function lessonPage(l, ctx, css, js) {
-  const { title, titleShort, descHtml, videoId, rutubeId, vk, blocks, prev, next } = ctx;
+  const { title, titleShort, descHtml, videoId, rutubeId, vk, blocks, codeFiles, prev, next } = ctx;
   const chrono = blocks.length ? blocks[blocks.length - 1].t : null;
   const fullTitle = `${title} — Юниорная Мануфактура`;
   const thumb = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
@@ -253,6 +280,7 @@ ${srcSwitch}
 <div class="sector-head"><span class="num">// СЕКТОР C</span><span class="title">Спецификация наряда</span><span class="meta">README.md</span></div>
 <div class="readme-body">${descHtml}</div>
 </section>
+${codeFiles.length ? codeSector(codeFiles, ghUrl) : ""}
 </div>
 <div class="col-right">${blocks.length ? tocSector(blocks) : NO_NOTES}</div>
 </div>
@@ -323,7 +351,19 @@ for (let i = 0; i < LESSONS.length; i++) {
     blocks = parseVideoMd(await readFile(`../${l.slug}/video.md`, "utf8"));
   } catch { /* no video.md — конспекта не будет */ }
 
-  const ctx = { title, titleShort, descHtml, videoId, rutubeId, vk, blocks, prev: LESSONS[i - 1] || null, next: LESSONS[i + 1] || null };
+  const codeFiles = [];
+  for (const rel of CODE[l.n] || []) {
+    try {
+      let src = (await readFile(`../${l.slug}/${rel}`, "utf8")).replace(/[\r\n]+$/, "");
+      if (src.charCodeAt(0) === 0xFEFF) src = src.slice(1);
+      const ext = rel.split(".").pop().toLowerCase();
+      codeFiles.push({ name: rel.split("/").pop(), html: codeToHtml(src, EXT_LANG[ext] || "text") });
+    } catch {
+      console.warn(`! ${l.slug}: ${rel} не найден, код пропущен`);
+    }
+  }
+
+  const ctx = { title, titleShort, descHtml, videoId, rutubeId, vk, blocks, codeFiles, prev: LESSONS[i - 1] || null, next: LESSONS[i + 1] || null };
   const html = await minify(lessonPage(l, ctx, cssLesson, lessonJs), minOpts);
   await writeFile(`${OUT}/lessons/${l.n}.html`, html);
   built++;

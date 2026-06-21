@@ -240,6 +240,30 @@
 .readme-body pre { background: var(--bg-2); border: 1px solid var(--line-strong); padding: 14px; overflow-x: auto; margin: 0 0 14px; }
 .readme-body pre code { border: 0; background: none; padding: 0; color: var(--ink-dim); }
 
+pre.shiki { background: var(--bg-2) !important; tab-size: 4; }
+.readme-body pre.shiki { padding: 14px; }
+.readme-body pre.shiki code { color: inherit; }
+
+.code-body { display: flex; flex-direction: column; gap: 16px; padding: 16px 18px 20px; }
+.code-file { margin: 0; }
+.code-file figcaption {
+  font-family: $mono; font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--amber); padding: 7px 11px; background: rgba(0, 0, 0, .18);
+  border: 1px solid var(--line-strong); border-bottom: 0;
+}
+.code-file pre.shiki {
+  margin: 0; padding: 14px; overflow-x: auto;
+  border: 1px solid var(--line-strong);
+  font-family: $mono; font-size: 12.5px; line-height: 1.55;
+}
+.code-more {
+  display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+  font-family: $mono; font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--amber); text-decoration: none; padding: 4px 0;
+}
+.code-more:hover { color: var(--amber-2); }
+.code-more .ico { width: 15px; height: 15px; }
+
 .col-right { display: flex; flex-direction: column; gap: 0; min-width: 0; }
 .toc { display: flex; flex-direction: column; }
 .toc-gauge { padding: 11px 16px; border-bottom: 1px solid var(--line); background: rgba(0, 0, 0, .12); }
