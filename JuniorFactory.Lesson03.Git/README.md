@@ -19,7 +19,7 @@ SSH ключ на коленке к githubу добавили.
 
 Резервная копия (VK Видео): [3. Основы Git](https://vkvideo.ru/video-227746634_456239030)
 
-[.net помойка / JuniorFactory / 3. Git Reset/Revert Commit](https://www.youtube.com/watch?v=eOfO8nDwksc)
+Продолжение про откат изменений – в [уроке 16. Git Reset и Revert](../JuniorFactory.Lesson16.GitReset).
 
 ---
 

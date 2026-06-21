@@ -24,9 +24,11 @@ const LESSONS = [
   {n:"13", slug:"JuniorFactory.Lesson13.LinqEf",      title:"EF / ORM",               desc:"Entity Framework и LINQ на мини-игре «Домики».",             tags:["EF CORE","REACT"]},
   {n:"14", slug:"JuniorFactory.Lesson14.Selenium",    title:"Selenium",               desc:"Автоматизация и тестирование браузера.",                     tags:["SELENIUM"]},
   {n:"15", slug:"JuniorFactory.Lesson15.Playwright",  title:"Playwright",             desc:"Современный инструмент UI-тестирования.",                    tags:["PLAYWRIGHT"]},
+  {n:"16", slug:"JuniorFactory.Lesson16.GitReset",    title:"Git Reset и Revert",     desc:"Откат изменений: reset, revert и работа с коммитами.",        tags:["GIT"]},
+  {n:"17", slug:"JuniorFactory.Lesson17.EfCoreAudit", title:"Аудит в EF Core",        desc:"Две стратегии логирования изменений данных через EF Core.",  tags:["EF CORE","AUDIT"]},
 ];
 
-const beltWords = ["C#",".NET","GIT","POSTGRESQL","ТЕСТЫ","HTML/CSS/JS","SOLID","ASP.NET","ФАЙЛЫ","XML/CSV","ASYNC","CI/CD","EF CORE","SELENIUM","PLAYWRIGHT"];
+const beltWords = ["C#",".NET","GIT","POSTGRESQL","ТЕСТЫ","HTML/CSS/JS","SOLID","ASP.NET","ФАЙЛЫ","XML/CSV","ASYNC","CI/CD","EF CORE","SELENIUM","PLAYWRIGHT","GIT RESET","EF AUDIT"];
 
 const CODE = {
   "01": ["JuniorFactory.Lesson01/Program.cs"],
@@ -338,6 +340,7 @@ for (let i = 0; i < LESSONS.length; i++) {
     console.warn(`! ${l.slug}: README.md не найден, пропуск`);
     continue;
   }
+  if (readme.charCodeAt(0) === 0xFEFF) readme = readme.slice(1);
   const videoId = extractVideoId(readme);
   if (!videoId) {
     console.warn(`! ${l.slug}: videoId не найден, пропуск`);

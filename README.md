@@ -117,6 +117,12 @@ YouTube-канал ["Лучик света продуктовой разрабо
 15. **[Playwright](JuniorFactory.Lesson15.Playwright)**  
     Знакомство с Playwright.
 
+16. **[Git Reset и Revert](JuniorFactory.Lesson16.GitReset)**  
+    Откат изменений: reset, revert и разница между ними.
+
+17. **[Аудит в EF Core](JuniorFactory.Lesson17.EfCoreAudit)**  
+    Две стратегии логирования изменений данных через EF Core.
+
 ## Как использовать этот курс
 
 1. **Порядок имеет значение**: уроки выстроены по нарастанию сложности, новичку лучше идти по порядку. Но самодостаточные

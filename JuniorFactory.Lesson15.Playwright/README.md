@@ -22,4 +22,4 @@ pwsh bin/Debug/net8.0/playwright.ps1 install
 
 ---
 
-[← 14. Selenium](../JuniorFactory.Lesson14.Selenium) · [Оглавление](../README.md)
+[← 14. Selenium](../JuniorFactory.Lesson14.Selenium) · [Оглавление](../README.md) · [16. Git Reset и Revert →](../JuniorFactory.Lesson16.GitReset)
