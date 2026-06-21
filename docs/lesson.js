@@ -97,10 +97,20 @@
 
   var switchEl = document.getElementById("srcSwitch");
   if (switchEl) {
+    var PKEY = "jf:platform";
+    try {
+      var saved = localStorage.getItem(PKEY);
+      var savedBtn = saved && switchEl.querySelector('button[data-src="' + saved + '"]');
+      if (savedBtn) {
+        platform = saved;
+        switchEl.querySelectorAll(".src-btn").forEach(function (x) { x.classList.toggle("is-active", x === savedBtn); });
+      }
+    } catch (e) {}
     switchEl.addEventListener("click", function (e) {
       var b = e.target.closest("button[data-src]");
       if (!b || b.dataset.src === platform) return;
       platform = b.dataset.src;
+      try { localStorage.setItem(PKEY, platform); } catch (e) {}
       switchEl.querySelectorAll(".src-btn").forEach(function (x) { x.classList.toggle("is-active", x === b); });
       if (iframe) ensureIframe(curStart);
     });
