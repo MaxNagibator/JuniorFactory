@@ -106,6 +106,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JuniorFactory.Lesson15.Play
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightConsoleApp", "JuniorFactory.Lesson15.Playwright\PlaywrightConsoleApp\PlaywrightConsoleApp\PlaywrightConsoleApp.csproj", "{1CFEA2A4-BA9E-43FC-8AA5-956E72BA6E6C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{DF891DAB-6C2E-4D35-A167-C0A1A6E3A8A4}"
+	ProjectSection(SolutionItems) = preProject
+		docs\build.mjs = docs\build.mjs
+		docs\index.html = docs\index.html
+		docs\main.js = docs\main.js
+		docs\package.json = docs\package.json
+		docs\styles.scss = docs\styles.scss
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,4 +1,9 @@
-﻿:root {
+﻿$display: "Russo One", sans-serif;
+$head: "Oswald", system-ui, sans-serif;
+$body: "PT Sans", system-ui, sans-serif;
+$mono: "JetBrains Mono", ui-monospace, monospace;
+
+:root {
   --bg: #0b1118;
   --bg-2: #0e1722;
   --panel: #11202e;
@@ -7,7 +12,7 @@
   --line-strong: rgba(120, 178, 214, .30);
   --ink: #eef3f7;
   --ink-dim: #8ca3b6;
-  --ink-faint: #5f7585;
+  --ink-faint: #6b8294;
   --amber: #ff8a1e;
   --amber-2: #ffc14d;
   --cyan: #46b9cc;
@@ -22,7 +27,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: "PT Sans", system-ui, sans-serif;
+  font-family: $body;
   font-size: 17px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -66,10 +71,17 @@ a { color: inherit; }
   z-index: 2;
 }
 
-.mono { font-family: "JetBrains Mono", monospace; }
+.mono { font-family: $mono; }
+
+.ico {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  vertical-align: -.14em;
+}
 
 .eyebrow {
-  font-family: "JetBrains Mono", monospace;
+  font-family: $mono;
   font-size: 12px;
   letter-spacing: .34em;
   text-transform: uppercase;
@@ -106,7 +118,7 @@ header {
   text-decoration: none;
 
   .mark {
-    font-family: "Russo One", sans-serif;
+    font-family: $display;
     font-size: 20px;
     letter-spacing: 1px;
     color: #16100a;
@@ -120,7 +132,7 @@ header {
   }
 
   b {
-    font-family: "Oswald";
+    font-family: $head;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -129,7 +141,7 @@ header {
 
   small {
     display: block;
-    font-family: "JetBrains Mono";
+    font-family: $mono;
     font-size: 9.5px;
     color: var(--ink-faint);
     letter-spacing: .22em;
@@ -144,7 +156,7 @@ nav {
   a {
     text-decoration: none;
     color: var(--ink-dim);
-    font-family: "Oswald";
+    font-family: $head;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1.2px;
@@ -159,13 +171,14 @@ nav {
       color: #16100a;
       background: var(--amber);
       border-color: var(--amber);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
 
       &:hover { background: var(--amber-2); border-color: var(--amber-2); }
     }
   }
 }
-
-.nav-mobile { display: none; }
 
 .hero {
   position: relative;
@@ -176,7 +189,7 @@ nav {
     position: absolute;
     right: -2%;
     top: 8%;
-    font-family: "Russo One";
+    font-family: $display;
     font-size: clamp(60px, 16vw, 230px);
     color: transparent;
     -webkit-text-stroke: 1px rgba(120, 178, 214, .10);
@@ -197,7 +210,7 @@ nav {
 }
 
 .h-spec {
-  font-family: "JetBrains Mono";
+  font-family: $mono;
   font-size: 11.5px;
   color: var(--ink-faint);
   letter-spacing: .18em;
@@ -215,7 +228,7 @@ h1 {
 
   .line1 {
     display: block;
-    font-family: "Russo One";
+    font-family: $display;
     font-size: clamp(40px, 8.5vw, 118px);
     color: var(--ink);
     text-shadow: 4px 4px 0 rgba(255, 138, 30, .20);
@@ -223,7 +236,7 @@ h1 {
 
   .line2 {
     display: block;
-    font-family: "Russo One";
+    font-family: $display;
     font-size: clamp(40px, 8.5vw, 118px);
     color: transparent;
     -webkit-text-stroke: 2px var(--amber);
@@ -248,7 +261,7 @@ h1 {
 
 .btn {
   text-decoration: none;
-  font-family: "Oswald";
+  font-family: $head;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -289,10 +302,10 @@ h1 {
   padding: 20px 18px;
   position: relative;
 
-  .val { font-family: "Russo One"; font-size: 34px; color: var(--amber); line-height: 1; }
+  .val { font-family: $display; font-size: 34px; color: var(--amber); line-height: 1; }
 
   .lab {
-    font-family: "JetBrains Mono";
+    font-family: $mono;
     font-size: 10.5px;
     letter-spacing: .18em;
     color: var(--ink-dim);
@@ -336,7 +349,7 @@ h1 {
   animation: belt 38s linear infinite;
 
   span {
-    font-family: "Oswald";
+    font-family: $head;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -344,7 +357,7 @@ h1 {
     color: var(--ink-dim);
     padding: 14px 0;
 
-    i { color: var(--amber); font-style: normal; margin: 0 22px; }
+    .belt-sep { color: var(--amber); width: .62em; height: .62em; margin: 0 22px; }
   }
 }
 
@@ -363,8 +376,8 @@ section { position: relative; z-index: 2; }
   flex-wrap: wrap;
   margin: 78px 0 36px;
 
-  h2 { font-family: "Russo One"; font-size: clamp(28px, 4.6vw, 52px); margin: 0; line-height: 1; }
-  .num { font-family: "JetBrains Mono"; color: var(--amber); font-size: 13px; letter-spacing: .2em; }
+  h2 { font-family: $display; font-size: clamp(28px, 4.6vw, 52px); margin: 0; line-height: 1; }
+  .num { font-family: $mono; color: var(--amber); font-size: 13px; letter-spacing: .2em; }
   p { margin: 0; color: var(--ink-dim); max-width: 38ch; font-size: 15px; }
 }
 
@@ -384,11 +397,11 @@ section { position: relative; z-index: 2; }
   display: flex;
   flex-direction: column;
   min-height: 218px;
-  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
-  opacity: 0;
-  transform: translateY(22px);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, opacity .4s ease;
 
-  &.in { opacity: 1; transform: none; }
+  .js & { opacity: 0; transform: translateY(22px); }
+  .js &.in { opacity: 1; transform: none; }
+  .js &.in:hover { transform: translateY(-5px); }
 
   &:hover {
     transform: translateY(-5px);
@@ -420,7 +433,7 @@ section { position: relative; z-index: 2; }
   }
 
   &__no {
-    font-family: "Russo One";
+    font-family: $display;
     font-size: 42px;
     line-height: .8;
     color: var(--ink-faint);
@@ -437,7 +450,7 @@ section { position: relative; z-index: 2; }
   }
 
   &__title {
-    font-family: "Oswald";
+    font-family: $head;
     font-weight: 600;
     font-size: 21px;
     letter-spacing: .4px;
@@ -454,7 +467,7 @@ section { position: relative; z-index: 2; }
     margin: 14px 0 0;
 
     span {
-      font-family: "JetBrains Mono";
+      font-family: $mono;
       font-size: 10px;
       letter-spacing: .08em;
       color: var(--ink-dim);
@@ -466,7 +479,7 @@ section { position: relative; z-index: 2; }
   &__cta {
     margin-top: auto;
     padding-top: 14px;
-    font-family: "Oswald";
+    font-family: $head;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -483,7 +496,7 @@ section { position: relative; z-index: 2; }
 }
 
 .flag {
-  font-family: "JetBrains Mono";
+  font-family: $mono;
   font-size: 9.5px;
   letter-spacing: .12em;
   padding: 3px 7px;
@@ -525,7 +538,7 @@ section { position: relative; z-index: 2; }
     position: absolute;
     left: 0;
     bottom: 0;
-    font-family: "JetBrains Mono";
+    font-family: $mono;
     font-size: 11px;
     color: var(--amber);
     letter-spacing: .12em;
@@ -539,15 +552,15 @@ section { position: relative; z-index: 2; }
   padding: 34px 36px;
 
   .role {
-    font-family: "JetBrains Mono";
+    font-family: $mono;
     font-size: 11.5px;
     letter-spacing: .24em;
     color: var(--cyan);
     text-transform: uppercase;
   }
 
-  h3 { font-family: "Russo One"; font-size: clamp(26px, 4vw, 40px); margin: 8px 0 2px; line-height: 1; }
-  .nick { font-family: "Oswald"; color: var(--ink-dim); letter-spacing: 1px; text-transform: uppercase; font-size: 14px; }
+  h3 { font-family: $display; font-size: clamp(26px, 4vw, 40px); margin: 8px 0 2px; line-height: 1; }
+  .nick { font-family: $head; color: var(--ink-dim); letter-spacing: 1px; text-transform: uppercase; font-size: 14px; }
   p { color: var(--ink-dim); max-width: 60ch; font-size: 15.5px; }
   .hl { color: var(--amber); text-decoration: none; }
 }
@@ -560,7 +573,7 @@ section { position: relative; z-index: 2; }
 
   a {
     text-decoration: none;
-    font-family: "Oswald";
+    font-family: $head;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -569,6 +582,9 @@ section { position: relative; z-index: 2; }
     border: 1px solid var(--line-strong);
     padding: 9px 14px;
     transition: .18s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 
     &:hover { border-color: var(--amber); color: var(--amber); transform: translateY(-2px); }
   }
@@ -591,7 +607,7 @@ footer {
 
   .col {
     h4 {
-      font-family: "Oswald";
+      font-family: $head;
       text-transform: uppercase;
       letter-spacing: 2px;
       font-size: 13px;
@@ -614,11 +630,11 @@ footer {
   .sign {
     max-width: 320px;
 
-    .mark { font-family: "Russo One"; font-size: 30px; color: var(--amber); letter-spacing: 1px; }
+    .mark { font-family: $display; font-size: 30px; color: var(--amber); letter-spacing: 1px; }
     p {
       color: var(--ink-faint);
       font-size: 13px;
-      font-family: "JetBrains Mono";
+      font-family: $mono;
       line-height: 1.7;
       margin: 12px 0 0;
     }
@@ -635,14 +651,19 @@ footer {
 @media (max-width: 680px) {
   body { font-size: 16px; }
   .wrap { padding: 0 18px; }
-  nav .nav-desk { display: none; }
-  nav .nav-mobile { display: inline-flex; }
+  .brand > span:not(.mark) { display: none; }
+  nav { gap: 6px; }
+  nav a { padding: 7px 9px; font-size: 12px; letter-spacing: .6px; }
   .grid { grid-template-columns: 1fr; }
   .gauges { grid-template-columns: 1fr 1fr; }
   h1 .line1, h1 .line2 { text-shadow: 2px 2px 0 rgba(255, 138, 30, .20); }
 }
 
+@media (max-width: 480px) {
+  nav .nav-desk { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; scroll-behavior: auto !important; }
-  .mod { opacity: 1; transform: none; }
+  .mod { opacity: 1 !important; transform: none !important; }
 }
