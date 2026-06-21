@@ -104,7 +104,7 @@
 }
 .gh-link:hover { border-color: var(--amber); color: var(--amber); transform: translateY(-2px); }
 
-.sheet { display: grid; grid-template-columns: 1.18fr .82fr; gap: 22px; align-items: start; padding: 30px 0 0; }
+.sheet { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; padding: 30px 0 0; }
 .col-left { display: flex; flex-direction: column; gap: 22px; position: sticky; top: 78px; }
 
 .sector {
