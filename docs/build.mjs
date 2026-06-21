@@ -327,7 +327,8 @@ const indexInlined = indexSrc
   .replace('<link rel="stylesheet" href="styles.css">', `<style>${cssLanding}</style>`)
   .replace('<script src="main.js" defer></script>', `<script>${mainJs}</script>`)
   .replace("<!--grid-->", gridHtml)
-  .replace("<!--belt-->", beltHtml);
+  .replace("<!--belt-->", beltHtml)
+  .replaceAll("{{TOTAL}}", TOTAL);
 await writeFile(`${OUT}/index.html`, await minify(indexInlined, minOpts));
 
 let built = 0;
