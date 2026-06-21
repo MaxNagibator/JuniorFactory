@@ -13,6 +13,10 @@
 Видео-урок по этой теме:
 [.net помойка / JuniorFactory / 3. Git Reset/Revert Commit](https://www.youtube.com/watch?v=eOfO8nDwksc)
 
+Резервная копия (Rutube): [3. Git Reset/Revert Commit](https://rutube.ru/video/94e0f073d6c69d60429d1ff8db1c5630/)
+
+Резервная копия (VK Видео): [3. Git Reset/Revert Commit](https://vkvideo.ru/video-227746634_456239040)
+
 ---
 
 [← 15. Playwright](../JuniorFactory.Lesson15.Playwright) · [Оглавление](../README.md) · [17. Аудит в EF Core →](../JuniorFactory.Lesson17.EfCoreAudit)

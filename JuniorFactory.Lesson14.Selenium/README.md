@@ -12,6 +12,8 @@
 
 Резервная копия (Rutube): [14. Selenium](https://rutube.ru/video/da57d11a562e4c658cec6d05109b97f6/)
 
+Резервная копия (VK Видео): [14. Selenium](https://vkvideo.ru/video-227746634_456239046)
+
 ---
 
 [← 13. EF/ORM](../JuniorFactory.Lesson13.LinqEf) · [Оглавление](../README.md) · [15. Playwright →](../JuniorFactory.Lesson15.Playwright)

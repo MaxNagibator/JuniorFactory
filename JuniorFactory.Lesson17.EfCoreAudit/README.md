@@ -13,6 +13,10 @@
 Видео-урок по этой теме:
 [.net помойка / ef core audit / две стратегии логирования](https://www.youtube.com/watch?v=KClfbWb8VzY)
 
+Резервная копия (Rutube): [ef core audit / две стратегии логирования](https://rutube.ru/video/0cd36111cbc3305da7cb756ae32fd1ad/)
+
+Резервная копия (VK Видео): [ef core audit / две стратегии логирования](https://vkvideo.ru/video-227746634_456239563)
+
 ---
 
 [← 16. Git Reset и Revert](../JuniorFactory.Lesson16.GitReset) · [Оглавление](../README.md)
