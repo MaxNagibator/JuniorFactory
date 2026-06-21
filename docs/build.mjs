@@ -1,4 +1,4 @@
-﻿import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
+﻿import { readFile, writeFile, mkdir, rm, cp } from "node:fs/promises";
 import { minify } from "html-minifier-terser";
 import * as sass from "sass";
 import MarkdownIt from "markdown-it";
@@ -317,6 +317,7 @@ const minOpts = {
 
 await rm(OUT, { recursive: true, force: true });
 await mkdir(`${OUT}/lessons`, { recursive: true });
+await cp("static", `${OUT}/static`, { recursive: true });
 
 const [indexSrc, mainJs] = await Promise.all([readFile("index.html", "utf8"), readFile("main.js", "utf8")]);
 const cssLanding = sass.compile("styles.scss", { style: "compressed" }).css;

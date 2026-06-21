@@ -38,3 +38,15 @@ search.addEventListener("input", filter);
 filter();
 
 document.getElementById("year").textContent = new Date().getFullYear();
+
+const copyBtn = document.getElementById("cryptoCopy");
+if (copyBtn) {
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(copyBtn.dataset.addr);
+      copyBtn.textContent = "Скопировано";
+      copyBtn.classList.add("ok");
+      setTimeout(() => { copyBtn.textContent = "Копировать"; copyBtn.classList.remove("ok"); }, 1600);
+    } catch { /* clipboard недоступен (file:// или старый браузер) */ }
+  });
+}
