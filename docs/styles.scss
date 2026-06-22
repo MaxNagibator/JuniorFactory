@@ -33,7 +33,7 @@
 
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.55fr .9fr;
+  grid-template-columns: 1.35fr 1fr;
   gap: 48px;
   align-items: end;
 }
@@ -128,20 +128,21 @@ h1 {
 
 .gauge {
   background: var(--panel-2);
-  padding: 20px 18px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: 6px;
 
-  .val { font-family: $display; font-size: clamp(22px, 4.5vw, 32px); color: var(--amber); line-height: 1; white-space: nowrap; }
+  .val { font-family: $display; font-size: clamp(26px, 4.5vw, 30px); color: var(--amber); line-height: 1; text-align: center; }
 
   .lab {
     font-family: $mono;
     font-size: 11.5px;
-    letter-spacing: .18em;
+    letter-spacing: 0;
     color: var(--ink-dim);
-    margin-top: auto;
-    padding-top: 8px;
     text-transform: uppercase;
+    text-align: center;
   }
 }
 
