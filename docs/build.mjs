@@ -306,6 +306,34 @@ const sep = '<svg class="ico belt-sep" aria-hidden="true"><use href="#i-diamond"
 const beltSpan = "<span>" + beltWords.map(w => w + sep).join("") + "</span>";
 const beltHtml = beltSpan + beltSpan;
 
+const STAGES = [
+  { name:"Язык C#",      hint:"Уверенно пишешь на C#: типы и ООП, файлы, потоки и принципы SOLID.", lessons:["01","02","07","09","10","11"] },
+  { name:"Инструменты",  hint:"Версионируешь код в Git, держишь данные в БД, автоматизируешь сборку.", lessons:["03","16","04","12"] },
+  { name:"Веб и данные", hint:"Поднимаешь веб-API и фронтенд, работаешь с базой через ORM.", lessons:["06","08","13","17"] },
+  { name:"Тестирование", hint:"Покрываешь код юнит-тестами и гоняешь браузер автотестами.", lessons:["05","14","15"] },
+];
+const byNum = Object.fromEntries(LESSONS.map(l => [l.n, l]));
+const roadmapHtml = STAGES.map((s, i) =>
+  `<div class="rm-stage"><div class="rm-head"><span class="rm-step">ЭТАП ${i + 1}</span><h3>${esc(s.name)}</h3></div>`
+  + `<div class="rm-les-list">${s.lessons.map(n => `<a class="rm-les" href="lessons/${n}.html"><span class="rm-num">${n}</span>${esc(byNum[n].title)}</a>`).join("")}</div>`
+  + `<p class="rm-hint"><span>На выходе</span>${esc(s.hint)}</p></div>`
+).join("");
+
+const FAQ = [
+  { q:"Можно ли учиться с нуля?", a:"Да. Курс стартует с самой первой строчки кода: переменные, циклы, типы. Никакой базы заранее знать не нужно." },
+  { q:"Нужен ли опыт в программировании?", a:"Нет. Ни диплом, ни знание математики или английского не требуются – всё объясняется на русском и на примерах. Хватит компьютера и желания разобраться." },
+  { q:"Сколько стоит курс?", a:"Полностью бесплатно: все видео на YouTube, весь код открыт на GitHub. Автора можно поддержать донатом по желанию, но это не обязательно." },
+  { q:"Какая нужна IDE и операционная система?", a:"Подойдут Visual Studio, JetBrains Rider или VS Code. Большинство уроков на .NET 8 кроссплатформенны; уроки 1, 2 и 9 рассчитаны на Windows." },
+  { q:"Сколько времени займёт прохождение?", a:"Своим темпом. Это 17 уроков с видео и кодом – можно идти по одному в день или растянуть на пару месяцев, закрепляя на практике." },
+  { q:"Поможет ли курс найти работу?", a:"Курс даёт базу уровня junior: C#, Git, базы данных, веб-API и тесты. Это фундамент для первых собеседований; дальше нужны пет-проекты и практика." },
+];
+const faqHtml = FAQ.map(f => `<details class="faq-item"><summary>${esc(f.q)}</summary><div class="faq-ans">${esc(f.a)}</div></details>`).join("");
+const faqLd = `<script type="application/ld+json">${jsonInline({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+})}</script>`;
+
 const minOpts = {
   collapseWhitespace: true,
   removeComments: true,
@@ -329,6 +357,9 @@ const indexInlined = indexSrc
   .replace('<script src="main.js" defer></script>', `<script>${mainJs}</script>`)
   .replace("<!--grid-->", gridHtml)
   .replace("<!--belt-->", beltHtml)
+  .replace("<!--roadmap-->", roadmapHtml)
+  .replace("<!--faq-->", faqHtml)
+  .replace("<!--faq-ld-->", faqLd)
   .replaceAll("{{TOTAL}}", TOTAL);
 await writeFile(`${OUT}/index.html`, await minify(indexInlined, minOpts));
 

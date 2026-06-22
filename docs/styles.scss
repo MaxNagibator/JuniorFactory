@@ -527,8 +527,151 @@ section { position: relative; z-index: 2; }
   image-rendering: pixelated;
 }
 
+.roadmap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+}
+
+.rm-stage {
+  background: var(--panel-2);
+  padding: 22px 20px 24px;
+  display: flex;
+  flex-direction: column;
+
+  .rm-head { margin-bottom: 16px; }
+  .rm-step { display: block; font-family: $mono; font-size: 11px; letter-spacing: .2em; color: var(--amber); margin-bottom: 6px; }
+  h3 { font-family: $head; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; font-size: 19px; margin: 0; line-height: 1.1; }
+}
+
+.rm-les-list { display: flex; flex-direction: column; gap: 6px; }
+
+.rm-les {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  text-decoration: none;
+  color: var(--ink-dim);
+  font-family: $head;
+  font-size: 14.5px;
+  letter-spacing: .2px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  transition: .16s;
+
+  .rm-num { font-family: $mono; font-size: 11px; color: var(--ink-faint); flex: none; }
+
+  &:hover { border-color: var(--amber); color: var(--ink); }
+  &:hover .rm-num { color: var(--amber); }
+}
+
+.rm-hint {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line-strong);
+  color: var(--ink-dim);
+  font-size: 13.5px;
+  line-height: 1.5;
+
+  span {
+    display: block;
+    font-family: $mono;
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 5px;
+  }
+}
+
+.onboard {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.ob-step {
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--line-strong);
+  padding: 24px 22px 22px;
+
+  .ob-no { font-family: $display; font-size: 40px; line-height: .8; color: var(--ink-faint); margin-bottom: 14px; }
+  h3 { font-family: $head; font-weight: 600; font-size: 19px; letter-spacing: .4px; margin: 0 0 8px; }
+  p { margin: 0 0 12px; color: var(--ink-dim); font-size: 15px; }
+  p:last-child { margin-bottom: 0; }
+  code { font-family: $mono; font-size: 12.5px; color: var(--amber); }
+  .hl { color: var(--amber); text-decoration: none; }
+  .hl:hover { text-decoration: underline; }
+}
+
+.ob-cmd {
+  display: block;
+  background: var(--bg-2);
+  border: 1px solid var(--line-strong);
+  padding: 11px 13px;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+.faq {
+  border: 1px solid var(--line-strong);
+  background: var(--panel-2);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line-strong);
+
+  &:last-child { border-bottom: 0; }
+
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    font-family: $head;
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: .3px;
+    color: var(--ink);
+    transition: color .16s;
+
+    &::-webkit-details-marker { display: none; }
+
+    &::after {
+      content: "+";
+      font-family: $mono;
+      font-size: 22px;
+      line-height: 1;
+      color: var(--amber);
+      flex: none;
+      transition: transform .2s;
+    }
+
+    &:hover { color: var(--amber); }
+  }
+
+  &[open] summary::after { content: "−"; }
+}
+
+.faq-ans {
+  padding: 0 22px 20px;
+  color: var(--ink-dim);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 72ch;
+}
+
 @media (max-width: 980px) {
   .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+  .roadmap { grid-template-columns: repeat(2, 1fr); }
   .operator { grid-template-columns: 1fr; }
   .op-photo { border-right: 0; border-bottom: 1px solid var(--line-strong); }
   .grid { grid-template-columns: repeat(2, 1fr); }
@@ -538,6 +681,8 @@ section { position: relative; z-index: 2; }
 
 @media (max-width: 680px) {
   .grid { grid-template-columns: 1fr; }
+  .roadmap { grid-template-columns: 1fr; }
+  .onboard { grid-template-columns: 1fr; }
   .gauges { grid-template-columns: 1fr 1fr; }
   h1 .line1, h1 .line2 { text-shadow: 2px 2px 0 rgba(255, 138, 30, .20); }
 }
