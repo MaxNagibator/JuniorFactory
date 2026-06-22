@@ -3,6 +3,8 @@ import { minify } from "html-minifier-terser";
 import * as sass from "sass";
 import MarkdownIt from "markdown-it";
 import { createHighlighter } from "shiki";
+import { Resvg } from "@resvg/resvg-js";
+import { decompress } from "wawoff2";
 
 const OUT = "dist";
 const SITE = "https://maxnagibator.github.io/JuniorFactory";
@@ -217,6 +219,20 @@ function lessonPage(l, ctx, css, js) {
     + (vk ? `<button type="button" class="src-btn" data-src="vk">VK Видео</button>` : "");
   const srcSwitch = altBtns ? `<div class="src-switch" id="srcSwitch" role="group" aria-label="Источник видео"><button type="button" class="src-btn is-active" data-src="yt">YouTube</button>${altBtns}</div>` : "";
 
+  const ld = jsonInline({
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "VideoObject", name: title, description: desc, thumbnailUrl: thumb,
+        embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
+        contentUrl: `https://www.youtube.com/watch?v=${videoId}`,
+        inLanguage: "ru", isFamilyFriendly: true },
+      { "@type": "BreadcrumbList", itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Линия сборки", item: `${SITE}/` },
+        { "@type": "ListItem", position: 2, name: `Станция ${l.n}: ${titleShort}`, item: `${SITE}/lessons/${l.n}.html` },
+      ] },
+    ],
+  });
+
   return `<!doctype html>
 <html lang="ru">
 <head>
@@ -226,6 +242,7 @@ function lessonPage(l, ctx, css, js) {
 <title>${esc(fullTitle)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${SITE}/lessons/${l.n}.html">
+<meta name="theme-color" content="#0b1118">
 <meta property="og:type" content="article">
 <meta property="og:url" content="${SITE}/lessons/${l.n}.html">
 <meta property="og:site_name" content="Юниорная Мануфактура">
@@ -238,18 +255,17 @@ function lessonPage(l, ctx, css, js) {
 <meta name="twitter:description" content="${esc(desc)}">
 <meta name="twitter:image" content="${thumb}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b1118'/%3E%3Ctext x='16' y='23' font-family='Arial Black,sans-serif' font-size='20' fill='%23ff8a1e' text-anchor='middle'%3EJF%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://i.ytimg.com">
 <link rel="preconnect" href="https://www.youtube-nocookie.com">
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Oswald:wght@400;500;600;700&family=PT+Sans:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>${css}</style>
+<script type="application/ld+json">${ld}</script>
 </head>
 <body>
+<a class="skip" href="#top">К содержанию</a>
 ${SPRITE}
 ${HEADER}
 <div class="hazard"></div>
-<main>
+<main id="top">
 <section class="order"><div class="wrap">
 <nav class="crumbs" aria-label="Навигация по курсу"><a href="../index.html#lessons">Линия сборки</a><span class="sep">/</span><span class="cur">Станция ${l.n}</span><span class="sep">/</span><span class="mono">НАРЯД № JF-${l.n}</span></nav>
 <div class="order-head">
@@ -334,6 +350,24 @@ const faqLd = `<script type="application/ld+json">${jsonInline({
   mainEntity: FAQ.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 })}</script>`;
 
+const PERSON = {
+  "@type": "Person", name: "Максим Грицина", alternateName: "bob217", url: "http://bob217.ru/",
+  sameAs: ["https://www.youtube.com/@bobito217", "https://t.me/bobito217", "https://www.twitch.tv/bobito217", "https://github.com/MaxNagibator"],
+};
+const landingLd = `<script type="application/ld+json">${jsonInline({
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Course", name: "Юниорная Мануфактура",
+      description: "Бесплатный курс по C# и .NET для начинающих: язык, Git, базы данных, веб-API, тесты и автоматизация браузера.",
+      url: `${SITE}/`, inLanguage: "ru", isAccessibleForFree: true, provider: PERSON, author: PERSON,
+      about: ["C#", ".NET", "ASP.NET Core", "Entity Framework", "Git", "PostgreSQL", "Unit testing"] },
+    { "@type": "ItemList", name: "Уроки курса «Юниорная Мануфактура»", numberOfItems: TOTAL,
+      itemListElement: LESSONS.map((l, i) => ({ "@type": "ListItem", position: i + 1, url: `${SITE}/lessons/${l.n}.html`, name: `${l.n}. ${l.title}` })) },
+  ],
+})}</script>`;
+
+const NOTFOUND = `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1118"><title>404 — Юниорная Мануфактура</title><meta name="robots" content="noindex"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b1118'/%3E%3Ctext x='16' y='23' font-family='Arial Black,sans-serif' font-size='20' fill='%23ff8a1e' text-anchor='middle'%3EJF%3C/text%3E%3C/svg%3E"><style>:root{color-scheme:dark}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b1118;color:#eef3f7;font-family:ui-monospace,monospace;text-align:center;padding:24px}.hz{height:9px;background:repeating-linear-gradient(45deg,#ff8a1e 0 16px,#1a1206 16px 32px);margin-bottom:40px}.big{font-family:system-ui,sans-serif;font-weight:900;font-size:clamp(70px,20vw,180px);line-height:.85;color:transparent;-webkit-text-stroke:2px #ff8a1e}.lab{letter-spacing:.2em;text-transform:uppercase;color:#ff8a1e;margin:18px 0 6px;font-size:13px}.txt{color:#8ca3b6;margin:0 0 28px}.home{display:inline-block;background:#ff8a1e;color:#16100a;text-decoration:none;text-transform:uppercase;letter-spacing:.1em;padding:14px 22px;font-weight:700}</style></head><body><div><div class="hz"></div><div class="big">404</div><p class="lab">// БРАК НА ЛИНИИ</p><p class="txt">Эта деталь не сошла с конвейера – страница не найдена.</p><a class="home" href="${SITE}/">← Вернуться на линию сборки</a></div></body></html>`;
+
 const minOpts = {
   collapseWhitespace: true,
   removeComments: true,
@@ -343,13 +377,86 @@ const minOpts = {
   minifyJS: true,
 };
 
+const RANGE = {
+  cyrillic: "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116",
+  latin: "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD",
+};
+const SUBSETS = ["cyrillic", "latin"];
+const FONTS = [
+  { family: "Russo One",      pkg: "@fontsource/russo-one",               weight: "400",     files: { cyrillic: "russo-one-cyrillic-400-normal.woff2",       latin: "russo-one-latin-400-normal.woff2" } },
+  { family: "PT Sans",        pkg: "@fontsource/pt-sans",                 weight: "400",     files: { cyrillic: "pt-sans-cyrillic-400-normal.woff2",         latin: "pt-sans-latin-400-normal.woff2" } },
+  { family: "PT Sans",        pkg: "@fontsource/pt-sans",                 weight: "700",     files: { cyrillic: "pt-sans-cyrillic-700-normal.woff2",         latin: "pt-sans-latin-700-normal.woff2" } },
+  { family: "Oswald",         pkg: "@fontsource-variable/oswald",         weight: "200 700", files: { cyrillic: "oswald-cyrillic-wght-normal.woff2",         latin: "oswald-latin-wght-normal.woff2" } },
+  { family: "JetBrains Mono", pkg: "@fontsource-variable/jetbrains-mono", weight: "100 800", files: { cyrillic: "jetbrains-mono-cyrillic-wght-normal.woff2", latin: "jetbrains-mono-latin-wght-normal.woff2" } },
+];
+function fontFaces(prefix) {
+  let css = "";
+  for (const f of FONTS) for (const s of SUBSETS)
+    css += `@font-face{font-family:'${f.family}';font-style:normal;font-weight:${f.weight};font-display:swap;src:url('${prefix}/${f.files[s]}') format('woff2');unicode-range:${RANGE[s]}}`;
+  return css;
+}
+async function copyFonts() {
+  await mkdir(`${OUT}/static/fonts`, { recursive: true });
+  for (const f of FONTS) for (const s of SUBSETS)
+    await cp(`node_modules/${f.pkg}/files/${f.files[s]}`, `${OUT}/static/fonts/${f.files[s]}`);
+}
+function ogSvg() {
+  const W = 1200, H = 630;
+  let grid = "";
+  for (let x = 48; x < W; x += 48) grid += `<path d="M${x} 0V${H}"/>`;
+  for (let y = 48; y < H; y += 48) grid += `<path d="M0 ${y}H${W}"/>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+<defs>
+<radialGradient id="ga" cx="12%" cy="0%" r="62%"><stop offset="0" stop-color="#ff8a1e" stop-opacity="0.18"/><stop offset="1" stop-color="#ff8a1e" stop-opacity="0"/></radialGradient>
+<radialGradient id="gc" cx="100%" cy="100%" r="70%"><stop offset="0" stop-color="#46b9cc" stop-opacity="0.14"/><stop offset="1" stop-color="#46b9cc" stop-opacity="0"/></radialGradient>
+<pattern id="hz" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="34" height="34" fill="#1a1206"/><rect width="17" height="34" fill="#ff8a1e"/></pattern>
+</defs>
+<rect width="${W}" height="${H}" fill="#0b1118"/>
+<g stroke="#46b9cc" stroke-opacity="0.06" stroke-width="1">${grid}</g>
+<rect width="${W}" height="${H}" fill="url(#ga)"/>
+<rect width="${W}" height="${H}" fill="url(#gc)"/>
+<rect x="0" y="0" width="${W}" height="12" fill="url(#hz)"/>
+<rect x="0" y="${H - 12}" width="${W}" height="12" fill="url(#hz)"/>
+<g transform="translate(1012 96) rotate(-3)"><rect width="116" height="116" fill="#ff8a1e"/><rect width="116" height="116" fill="none" stroke="#16100a" stroke-width="2"/><text x="58" y="86" font-family="Russo One" font-size="60" fill="#16100a" text-anchor="middle">JF</text></g>
+<rect x="80" y="138" width="3" height="22" fill="#46b9cc"/>
+<text x="96" y="156" font-family="JetBrains Mono" font-size="21" fill="#8194a7">СПЕЦИФИКАЦИЯ № JF-${TOTAL} · .NET ЦЕХ</text>
+<text x="78" y="312" font-family="Russo One" font-size="96" fill="#eef3f7">ЮНИОРНАЯ</text>
+<text x="78" y="416" font-family="Russo One" font-size="96" fill="#ff8a1e">МАНУФАКТУРА</text>
+<text x="82" y="486" font-family="JetBrains Mono" font-size="25" fill="#8ca3b6">${TOTAL} УРОКОВ · C# · .NET 8 · ВИДЕО + КОД · БЕСПЛАТНО</text>
+<path d="M80 540h150" stroke="#ff8a1e" stroke-width="3"/>
+<text x="80" y="582" font-family="JetBrains Mono" font-size="20" fill="#46b9cc">КУРС ПО C# И .NET С НУЛЯ – ОТ ПЕРВОЙ СТРОЧКИ ДО ВЕБ-API И АВТОТЕСТОВ</text>
+</svg>`;
+}
+async function buildOg() {
+  const tmp = `${OUT}/static/.fonttmp`;
+  await mkdir(tmp, { recursive: true });
+  const want = [
+    ["@fontsource/russo-one", "russo-one-cyrillic-400-normal.woff2"],
+    ["@fontsource/russo-one", "russo-one-latin-400-normal.woff2"],
+    ["@fontsource-variable/jetbrains-mono", "jetbrains-mono-cyrillic-wght-normal.woff2"],
+    ["@fontsource-variable/jetbrains-mono", "jetbrains-mono-latin-wght-normal.woff2"],
+  ];
+  const ttfPaths = [];
+  for (const [pkg, file] of want) {
+    const ttf = Buffer.from(await decompress(await readFile(`node_modules/${pkg}/files/${file}`)));
+    const out = `${tmp}/${file.replace(/\.woff2$/, ".ttf")}`;
+    await writeFile(out, ttf);
+    ttfPaths.push(out);
+  }
+  const png = new Resvg(ogSvg(), { fitTo: { mode: "width", value: 1200 }, font: { loadSystemFonts: false, fontFiles: ttfPaths, defaultFontFamily: "Russo One" } }).render().asPng();
+  await writeFile(`${OUT}/static/og.png`, png);
+  await rm(tmp, { recursive: true, force: true });
+}
+
 await rm(OUT, { recursive: true, force: true });
 await mkdir(`${OUT}/lessons`, { recursive: true });
 await cp("static", `${OUT}/static`, { recursive: true });
+await copyFonts();
+await buildOg();
 
 const [indexSrc, mainJs] = await Promise.all([readFile("index.html", "utf8"), readFile("main.js", "utf8")]);
-const cssLanding = sass.compile("styles.scss", { style: "compressed" }).css;
-const cssLesson = sass.compile("lesson.scss", { style: "compressed" }).css;
+const cssLanding = fontFaces("static/fonts") + sass.compile("styles.scss", { style: "compressed" }).css;
+const cssLesson = fontFaces("../static/fonts") + sass.compile("lesson.scss", { style: "compressed" }).css;
 const lessonJs = await readFile("lesson.js", "utf8");
 
 const indexInlined = indexSrc
@@ -357,6 +464,7 @@ const indexInlined = indexSrc
   .replace('<script src="main.js" defer></script>', `<script>${mainJs}</script>`)
   .replace("<!--grid-->", gridHtml)
   .replace("<!--belt-->", beltHtml)
+  .replace("</head>", landingLd + "</head>")
   .replace("<!--roadmap-->", roadmapHtml)
   .replace("<!--faq-->", faqHtml)
   .replace("<!--faq-ld-->", faqLd)
@@ -405,9 +513,13 @@ for (let i = 0; i < LESSONS.length; i++) {
   built++;
 }
 
+const lastmod = new Date().toISOString().slice(0, 10);
 const sitemapUrls = [`${SITE}/`, ...LESSONS.map(l => `${SITE}/lessons/${l.n}.html`)];
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls.map(u => `<url><loc>${u}</loc></url>`).join("\n")}\n</urlset>\n`;
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls.map(u => `<url><loc>${u}</loc><lastmod>${lastmod}</lastmod></url>`).join("\n")}\n</urlset>\n`;
 await writeFile(`${OUT}/sitemap.xml`, sitemap);
+
+await writeFile(`${OUT}/robots.txt`, `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
+await writeFile(`${OUT}/404.html`, await minify(NOTFOUND, minOpts));
 
 const idxKb = (Buffer.byteLength(await readFile(`${OUT}/index.html`)) / 1024).toFixed(1);
 console.log(`built ${OUT}/index.html — ${idxKb} kb`);

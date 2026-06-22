@@ -9,9 +9,15 @@
     "build": "node build.mjs"
   },
   "devDependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
+    "@fontsource-variable/oswald": "^5.2.8",
+    "@fontsource/pt-sans": "^5.2.8",
+    "@fontsource/russo-one": "^5.2.7",
+    "@resvg/resvg-js": "^2.6.2",
     "html-minifier-terser": "^7.2.0",
     "markdown-it": "^14.2.0",
     "sass": "^1.77.0",
-    "shiki": "^4.2.0"
+    "shiki": "^4.2.0",
+    "wawoff2": "^2.0.1"
   }
 }

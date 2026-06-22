@@ -18,6 +18,7 @@ $mono: "JetBrains Mono", ui-monospace, monospace;
   --cyan: #46b9cc;
   --maxw: 1240px;
   --r: 3px;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -65,6 +66,26 @@ a { color: inherit; }
 img { max-width: 100%; }
 
 :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+.skip {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  transform: translateY(-150%);
+  background: var(--amber);
+  color: #16100a;
+  font-family: $head;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-size: 13px;
+  padding: 10px 16px;
+  text-decoration: none;
+  transition: transform .18s;
+
+  &:focus { transform: none; }
+}
 
 .wrap {
   max-width: var(--maxw);
