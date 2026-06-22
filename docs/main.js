@@ -1,18 +1,24 @@
 ﻿const grid = document.getElementById("grid");
-
-const io = new IntersectionObserver((entries) => {
-  entries.forEach((e) => {
-    if (e.isIntersecting) {
-      const i = [...grid.children].indexOf(e.target);
-      e.target.style.transitionDelay = Math.min(i, 9) * 55 + "ms";
-      e.target.classList.add("in");
-      io.unobserve(e.target);
-    }
-  });
-}, { threshold: .15 });
-[...grid.children].forEach(c => io.observe(c));
-
 const cards = [...grid.children];
+
+try {
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.transitionDelay = Math.min(cards.indexOf(e.target), 9) * 55 + "ms";
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: .15 });
+    cards.forEach(c => io.observe(c));
+  } else {
+    cards.forEach(c => c.classList.add("in"));
+  }
+} catch (e) {
+  cards.forEach(c => c.classList.add("in"));
+}
 const search = document.getElementById("lessonSearch");
 const count = document.getElementById("lessonCount");
 const empty = document.getElementById("gridEmpty");

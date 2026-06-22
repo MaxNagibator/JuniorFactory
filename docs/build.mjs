@@ -67,6 +67,11 @@ function timeToSeconds(tc) {
   return p.length === 3 ? p[0] * 3600 + p[1] * 60 + p[2] : p[0] * 60 + p[1];
 }
 
+function iso8601Duration(sec) {
+  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+  return "PT" + (h ? h + "H" : "") + (m ? m + "M" : "") + (s || (!h && !m) ? s + "S" : "");
+}
+
 function extractVideoId(readme) {
   const m = readme.match(/\[[^\]]*\]\(https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
   return m ? m[1] : null;
@@ -204,6 +209,7 @@ function lessonPage(l, ctx, css, js) {
   const chrono = blocks.length ? blocks[blocks.length - 1].t : null;
   const fullTitle = `${title} — Юниорная Мануфактура`;
   const thumb = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+  const ogImg = `${SITE}/static/og/${l.n}.png`;
   const ghUrl = REPO + l.slug;
   const desc = `Урок ${l.n} курса «Юниорная Мануфактура»: ${titleShort}. Видео + интерактивный конспект и код урока.`;
 
@@ -225,7 +231,8 @@ function lessonPage(l, ctx, css, js) {
       { "@type": "VideoObject", name: title, description: desc, thumbnailUrl: thumb,
         embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
         contentUrl: `https://www.youtube.com/watch?v=${videoId}`,
-        inLanguage: "ru", isFamilyFriendly: true },
+        inLanguage: "ru", isFamilyFriendly: true,
+        ...(chrono ? { duration: iso8601Duration(timeToSeconds(chrono)) } : {}) },
       { "@type": "BreadcrumbList", itemListElement: [
         { "@type": "ListItem", position: 1, name: "Линия сборки", item: `${SITE}/` },
         { "@type": "ListItem", position: 2, name: `Станция ${l.n}: ${titleShort}`, item: `${SITE}/lessons/${l.n}.html` },
@@ -249,11 +256,14 @@ function lessonPage(l, ctx, css, js) {
 <meta property="og:locale" content="ru_RU">
 <meta property="og:title" content="${esc(fullTitle)}">
 <meta property="og:description" content="${esc(desc)}">
-<meta property="og:image" content="${thumb}">
+<meta property="og:image" content="${ogImg}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(titleShort)} — урок ${l.n}, Юниорная Мануфактура">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(fullTitle)}">
 <meta name="twitter:description" content="${esc(desc)}">
-<meta name="twitter:image" content="${thumb}">
+<meta name="twitter:image" content="${ogImg}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b1118'/%3E%3Ctext x='16' y='23' font-family='Arial Black,sans-serif' font-size='20' fill='%23ff8a1e' text-anchor='middle'%3EJF%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://i.ytimg.com">
 <link rel="preconnect" href="https://www.youtube-nocookie.com">
@@ -291,7 +301,7 @@ ${srcSwitch}
 <span class="tape" aria-hidden="true"><span class="live">&#9679; ЗАПИСЬ ЛИНИИ</span><span>${esc(tapeRight)}</span></span>
 </button>
 </div>
-<div class="now-playing" id="nowPlaying" hidden><span class="lab">Текущий блок:</span><span class="np-time" id="npTime">00:00</span><span class="np-title" id="npTitle"></span></div>
+<div class="now-playing" id="nowPlaying" aria-live="polite" hidden><span class="lab">Текущий блок:</span><span class="np-time" id="npTime">00:00</span><span class="np-title" id="npTitle"></span></div>
 </div>
 </section>
 <section class="sector" aria-label="Описание урока">
@@ -400,7 +410,7 @@ async function copyFonts() {
   for (const f of FONTS) for (const s of SUBSETS)
     await cp(`node_modules/${f.pkg}/files/${f.files[s]}`, `${OUT}/static/fonts/${f.files[s]}`);
 }
-function ogSvg() {
+function ogFrame(inner) {
   const W = 1200, H = 630;
   let grid = "";
   for (let x = 48; x < W; x += 48) grid += `<path d="M${x} 0V${H}"/>`;
@@ -418,16 +428,30 @@ function ogSvg() {
 <rect x="0" y="0" width="${W}" height="12" fill="url(#hz)"/>
 <rect x="0" y="${H - 12}" width="${W}" height="12" fill="url(#hz)"/>
 <g transform="translate(1012 96) rotate(-3)"><rect width="116" height="116" fill="#ff8a1e"/><rect width="116" height="116" fill="none" stroke="#16100a" stroke-width="2"/><text x="58" y="86" font-family="Russo One" font-size="60" fill="#16100a" text-anchor="middle">JF</text></g>
-<rect x="80" y="138" width="3" height="22" fill="#46b9cc"/>
+${inner}
+</svg>`;
+}
+function ogSvg() {
+  return ogFrame(`<rect x="80" y="138" width="3" height="22" fill="#46b9cc"/>
 <text x="96" y="156" font-family="JetBrains Mono" font-size="21" fill="#8194a7">СПЕЦИФИКАЦИЯ № JF-${TOTAL} · .NET ЦЕХ</text>
 <text x="78" y="312" font-family="Russo One" font-size="96" fill="#eef3f7">ЮНИОРНАЯ</text>
 <text x="78" y="416" font-family="Russo One" font-size="96" fill="#ff8a1e">МАНУФАКТУРА</text>
 <text x="82" y="486" font-family="JetBrains Mono" font-size="25" fill="#8ca3b6">${TOTAL} УРОКОВ · C# · .NET 8 · ВИДЕО + КОД · БЕСПЛАТНО</text>
 <path d="M80 540h150" stroke="#ff8a1e" stroke-width="3"/>
-<text x="80" y="582" font-family="JetBrains Mono" font-size="20" fill="#46b9cc">КУРС ПО C# И .NET С НУЛЯ – ОТ ПЕРВОЙ СТРОЧКИ ДО ВЕБ-API И АВТОТЕСТОВ</text>
-</svg>`;
+<text x="80" y="582" font-family="JetBrains Mono" font-size="20" fill="#46b9cc">КУРС ПО C# И .NET С НУЛЯ – ОТ ПЕРВОЙ СТРОЧКИ ДО ВЕБ-API И АВТОТЕСТОВ</text>`);
 }
-async function buildOg() {
+function lessonOgSvg(l, titleShort, chrono) {
+  const t = titleShort.trim();
+  const size = Math.max(46, Math.min(92, Math.floor(1020 / (t.length * 0.62))));
+  const meta = [...l.tags, ...(chrono ? [chrono] : [])].join(" · ").toUpperCase();
+  return ogFrame(`<rect x="80" y="138" width="3" height="22" fill="#46b9cc"/>
+<text x="96" y="156" font-family="JetBrains Mono" font-size="21" fill="#8194a7">НАРЯД № JF-${l.n} · СТАНЦИЯ ${l.n} / ${TOTAL}</text>
+<text x="78" y="338" font-family="Russo One" font-size="${size}" fill="#ff8a1e">${esc(t)}</text>
+<path d="M80 398h150" stroke="#ff8a1e" stroke-width="3"/>
+<text x="80" y="442" font-family="JetBrains Mono" font-size="24" fill="#46b9cc">${esc(meta)}</text>
+<text x="80" y="582" font-family="JetBrains Mono" font-size="20" fill="#8ca3b6">ЮНИОРНАЯ МАНУФАКТУРА · КУРС ПО C# И .NET С НУЛЯ</text>`);
+}
+async function loadOgFonts() {
   const tmp = `${OUT}/static/.fonttmp`;
   await mkdir(tmp, { recursive: true });
   const want = [
@@ -443,16 +467,19 @@ async function buildOg() {
     await writeFile(out, ttf);
     ttfPaths.push(out);
   }
-  const png = new Resvg(ogSvg(), { fitTo: { mode: "width", value: 1200 }, font: { loadSystemFonts: false, fontFiles: ttfPaths, defaultFontFamily: "Russo One" } }).render().asPng();
-  await writeFile(`${OUT}/static/og.png`, png);
-  await rm(tmp, { recursive: true, force: true });
+  return { tmp, ttfPaths };
+}
+function renderOg(svg, ttfPaths) {
+  return new Resvg(svg, { fitTo: { mode: "width", value: 1200 }, font: { loadSystemFonts: false, fontFiles: ttfPaths, defaultFontFamily: "Russo One" } }).render().asPng();
 }
 
 await rm(OUT, { recursive: true, force: true });
 await mkdir(`${OUT}/lessons`, { recursive: true });
 await cp("static", `${OUT}/static`, { recursive: true });
+await mkdir(`${OUT}/static/og`, { recursive: true });
 await copyFonts();
-await buildOg();
+const ogFonts = await loadOgFonts();
+await writeFile(`${OUT}/static/og.png`, renderOg(ogSvg(), ogFonts.ttfPaths));
 
 const [indexSrc, mainJs] = await Promise.all([readFile("index.html", "utf8"), readFile("main.js", "utf8")]);
 const cssLanding = fontFaces("static/fonts") + sass.compile("styles.scss", { style: "compressed" }).css;
@@ -507,11 +534,15 @@ for (let i = 0; i < LESSONS.length; i++) {
     }
   }
 
+  const chrono = blocks.length ? blocks[blocks.length - 1].t : null;
+  await writeFile(`${OUT}/static/og/${l.n}.png`, renderOg(lessonOgSvg(l, titleShort, chrono), ogFonts.ttfPaths));
+
   const ctx = { title, titleShort, descHtml, videoId, rutubeId, vk, blocks, codeFiles, prev: LESSONS[i - 1] || null, next: LESSONS[i + 1] || null };
   const html = await minify(lessonPage(l, ctx, cssLesson, lessonJs), minOpts);
   await writeFile(`${OUT}/lessons/${l.n}.html`, html);
   built++;
 }
+await rm(ogFonts.tmp, { recursive: true, force: true });
 
 const lastmod = new Date().toISOString().slice(0, 10);
 const sitemapUrls = [`${SITE}/`, ...LESSONS.map(l => `${SITE}/lessons/${l.n}.html`)];

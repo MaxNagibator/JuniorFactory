@@ -77,7 +77,8 @@
       n.classList.toggle("done", idx < i);
     });
     var btn = nodes[i];
-    if (btn && typeof btn.scrollIntoView === "function") {
+    var listScrolls = window.matchMedia("(min-width: 981px)").matches;
+    if (btn && listScrolls && typeof btn.scrollIntoView === "function") {
       var rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       try { btn.scrollIntoView({ block: "nearest", behavior: rm ? "auto" : "smooth" }); } catch (e) { btn.scrollIntoView(); }
     }
