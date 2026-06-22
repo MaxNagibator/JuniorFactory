@@ -326,7 +326,29 @@ ${js}</script>
 </html>`;
 }
 
-const gridHtml = LESSONS.map(l => `<a class="mod" href="lessons/${l.n}.html"><div class="mod__top"><span class="mod__no">${l.n}</span><span class="mod__flags">${l.win ? '<span class="flag win">WINDOWS</span>' : ''}${l.docs ? '<span class="flag docs">ТЕОРИЯ</span>' : ''}</span></div><h3 class="mod__title">${l.title}</h3><p class="mod__desc">${l.desc}</p><div class="mod__tags">${l.tags.map(t => `<span>${t}</span>`).join("")}</div><div class="mod__cta">Открыть урок <svg class="ico arr" aria-hidden="true"><use href="#i-arrow"/></svg></div></a>`).join("");
+async function readReadme(slug) {
+  let r = await readFile(`../${slug}/README.md`, "utf8");
+  if (r.charCodeAt(0) === 0xFEFF) r = r.slice(1);
+  return r;
+}
+function platformLinks(readme) {
+  const yt = extractVideoId(readme), rt = extractRutubeId(readme), vk = extractVk(readme);
+  const out = [];
+  if (yt) out.push({ ab: "YT", name: "YouTube", key: "yt", url: `https://www.youtube.com/watch?v=${yt}` });
+  if (rt) out.push({ ab: "RT", name: "RuTube", key: "rt", url: `https://rutube.ru/video/${rt}/` });
+  if (vk) out.push({ ab: "VK", name: "VK Видео", key: "vk", url: `https://vkvideo.ru/video${vk.o}_${vk.i}` });
+  return out;
+}
+const srcByNum = {};
+for (const l of LESSONS) {
+  try { srcByNum[l.n] = platformLinks(await readReadme(l.slug)); }
+  catch { srcByNum[l.n] = []; }
+}
+const gridHtml = LESSONS.map(l => {
+  const src = srcByNum[l.n].map(s => `<a class="mod__src-link mod__src-link--${s.key}" href="${s.url}" target="_blank" rel="noopener" aria-label="${s.name}">${s.ab}</a>`).join("");
+  const cta = `<a class="mod__cta" href="lessons/${l.n}.html" aria-label="Открыть урок ${l.n}: ${esc(l.title)}">Открыть урок <svg class="ico arr" aria-hidden="true"><use href="#i-arrow"/></svg></a>`;
+  return `<article class="mod"><div class="mod__top"><span class="mod__no">${l.n}</span><span class="mod__flags">${l.win ? '<span class="flag win">WINDOWS</span>' : ''}${l.docs ? '<span class="flag docs">ТЕОРИЯ</span>' : ''}</span></div><h3 class="mod__title">${l.title}</h3><p class="mod__desc">${l.desc}</p><div class="mod__tags">${l.tags.map(t => `<span>${t}</span>`).join("")}</div><div class="mod__foot">${cta}${src ? `<span class="mod__src">${src}</span>` : ""}</div></article>`;
+}).join("");
 
 const sep = '<svg class="ico belt-sep" aria-hidden="true"><use href="#i-diamond"/></svg>';
 const beltSpan = "<span>" + beltWords.map(w => w + sep).join("") + "</span>";
